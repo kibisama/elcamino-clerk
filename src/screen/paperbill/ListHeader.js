@@ -5,7 +5,6 @@ import Grid from '@mui/material/Unstable_Grid2';
 //----------------------------Style----------------------------
 const style = {
   container: {
-    borderBottom: '1px solid',
     pb: '0.5rem',
   },
   storeInfo: {
@@ -31,10 +30,12 @@ const style = {
 //-------------------------------------------------------------
 
 const ListHeader = ({ ...props }) => {
-  const { date, page } = props;
-  const { storeInfo } = useSelector((state) => state.paperBill.settings);
+  const { date, page, planIndex } = props;
+  const { storeInfo, plans } = useSelector((state) => state.paperBill.settings);
+  const billingInfo = plans[planIndex].billingInfo;
+  console.log(billingInfo);
   return (
-    <Typography sx={{ ...style.container, pb: '0.1rem' }}>
+    <Typography>
       <Grid sx={style.container} container>
         <Grid sx={style.storeInfo} xs={4}>
           <Box>{storeInfo.name}</Box>
@@ -43,7 +44,9 @@ const ListHeader = ({ ...props }) => {
           <Box>{storeInfo.phone}</Box>
         </Grid>
         <Grid display="flex" justifyContent="center" alignItems="end" xs={4}>
-          <Box>TITLE HERE</Box>
+          <Box>
+            {billingInfo.name} {billingInfo.department}
+          </Box>
         </Grid>
         <Grid
           display="flex"

@@ -1,4 +1,3 @@
-import { useLayoutEffect } from 'react';
 import { useSelector } from 'react-redux';
 import { useParams } from 'react-router-dom';
 import { Box } from '@mui/material';
@@ -11,16 +10,27 @@ import ListHeader from './ListHeader';
 const style = {
   container: {
     width: '1054px',
+    height: '816px',
     flexGrow: 1,
     '@media print': {
       '@page': {
-        size: 'landscape 279.4mm 215.9mm',
+        size: 'letter landscape',
       },
+    },
+    '& .MuiDataGrid-root': {
+      border: 'none',
     },
   },
   dataGrid: {
     my: '1rem',
     fontSize: '0.7rem',
+    '& .MuiDataGrid-columnHeaders': {
+      border: '2px solid',
+      borderRadius: '0px',
+    },
+    '& .printHeader': {
+      borderRight: '2px solid',
+    },
   },
 };
 //-------------------------------------------------------------
@@ -42,29 +52,26 @@ const ListPrintPreview = ({ ...props }) => {
   for (let i = 0; i < rows.length; i++) {
     rows[i] = copy.splice(0, 25);
   }
-  console.log(rows);
 
-  return (
-    // TODO: 맵함수로 25개 씩 나눠서 페이지복제
-    rows.map((row, i) => (
-      <Box sx={{ ...style.container, ...sx }}>
-        <ListHeader
-          date={content.invoiceDate}
-          page={{ max: totalPages, current: i + 1 }}
-        />
-        <DataGrid
-          sx={style.dataGrid}
-          rows={rows[i]}
-          columns={printPaperBillColumns}
-          columnHeaderHeight={45}
-          rowHeight={30}
-          density="compact"
-          disableColumnMenu={true}
-          hideFooter={true}
-        />
-      </Box>
-    ))
-  );
+  return rows.map((row, i) => (
+    <Box key={i} sx={{ ...style.container, ...sx }}>
+      <ListHeader
+        date={content.invoiceDate}
+        page={{ max: totalPages, current: i + 1 }}
+        planIndex={planId}
+      />
+      <DataGrid
+        sx={style.dataGrid}
+        rows={rows[i]}
+        columns={printPaperBillColumns}
+        columnHeaderHeight={45}
+        rowHeight={30}
+        density="compact"
+        disableColumnMenu={true}
+        hideFooter={true}
+      />
+    </Box>
+  ));
 };
 
 export default ListPrintPreview;

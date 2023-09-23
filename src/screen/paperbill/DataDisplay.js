@@ -20,7 +20,7 @@ const style = {
       bgcolor: 'text.disabled',
     },
     '& .rowFacilityStaff': {
-      bgcolor: 'text.disabled',
+      bgcolor: 'warning.light',
     },
     '& .cellPriceError': {
       color: 'error.main',

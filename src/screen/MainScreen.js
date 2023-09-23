@@ -16,9 +16,17 @@ const style = {
     display: 'flex',
   },
   tabs: {
+    position: 'fixed',
+    display: 'flex',
+    flexDirection: 'row',
+    alignItems: 'center',
     borderRight: 1,
     borderColor: 'divider',
+    minWidth: '7.5rem',
     height: '100vh',
+  },
+  screen: {
+    ml: '7.5rem',
   },
 };
 //-------------------------------------------------------------
@@ -43,18 +51,20 @@ const MainScreen = () => {
         <Tab icon={<AutoStoriesIcon />} label="CII Recon" />
         <Tab icon={<SettingsIcon />} label="Settings" />
       </Tabs>
-      <CustomTabPanel value={modeValue} index={0}>
-        Hello El Camino Pharmacy
-      </CustomTabPanel>
-      <CustomTabPanel value={modeValue} index={1}>
-        <PaperBill />
-      </CustomTabPanel>
-      <CustomTabPanel value={modeValue} index={2}>
-        CII Recon
-      </CustomTabPanel>
-      <CustomTabPanel value={modeValue} index={3}>
-        Settings
-      </CustomTabPanel>
+      <Box sx={style.screen}>
+        <CustomTabPanel value={modeValue} index={0}>
+          Hello El Camino Pharmacy
+        </CustomTabPanel>
+        <CustomTabPanel value={modeValue} index={1}>
+          <PaperBill />
+        </CustomTabPanel>
+        <CustomTabPanel value={modeValue} index={2}>
+          CII Recon
+        </CustomTabPanel>
+        <CustomTabPanel value={modeValue} index={3}>
+          Settings
+        </CustomTabPanel>
+      </Box>
     </Box>
   );
 };

@@ -99,13 +99,15 @@ const PaperBillToolbar = () => {
       >
         Transfer
       </Button>
-      <Button
-        {...buttonBaseProps}
-        startIcon={<PrintIcon />}
-        onClick={handlePrintList}
-      >
-        Print
-      </Button>
+      {currentPlan !== plans.length - 1 && (
+        <Button
+          {...buttonBaseProps}
+          startIcon={<PrintIcon />}
+          onClick={handlePrintList}
+        >
+          Print
+        </Button>
+      )}
     </GridToolbarContainer>
   );
 };
