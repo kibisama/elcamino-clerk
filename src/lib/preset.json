@@ -1,0 +1,287 @@
+{
+  "storeInfo": {
+    "name": "El Camino Pharmacy",
+    "manager": "Janice Chang",
+    "address": "10940 Victory Blvd.",
+    "city": "North Hollywood, CA 91606",
+    "phone": "(818) 763-4334",
+    "fax": "(818) 763-4610"
+  },
+  "plans": [
+    {
+      "planName": "CRI",
+      "billingInfo": {
+        "name": "CRI-Help Inc",
+        "department": "Pfleger Detox",
+        "address": "11027 Burbank Blvd.",
+        "city": "North Hollywood, CA 91605",
+        "phone": "(818) 761-1652"
+      },
+      "doctor": ["Burstin,Charles"],
+      "staffID": ["1132008", "1030913"],
+      "patientAddress": ["Detox 11027 Burbank Blvd"],
+      "patientPhone": ["(818) 761-1652", "(818) 985-8323"]
+    },
+    {
+      "planName": "CRI-R",
+      "billingInfo": {
+        "name": "CRI-Help Inc",
+        "department": "Pfleger Residential",
+        "address": "11027 Burbank Blvd.",
+        "city": "North Hollywood, CA 91605",
+        "phone": "(818) 761-1652"
+      },
+      "doctor": [""],
+      "staffID": [""],
+      "patientAddress": ["11027 Burbank Blvd"],
+      "patientPhone": [""]
+    },
+    {
+      "planName": "CRI-S",
+      "billingInfo": {
+        "name": "CRI-Help Inc",
+        "department": "Socorro Detox",
+        "address": "11027 Burbank Blvd.",
+        "city": "North Hollywood, CA 91605",
+        "phone": "(818) 761-1652"
+      },
+      "doctor": ["Milam,Mallory"],
+      "staffID": [""],
+      "patientAddress": ["Detox 4445 Burns Ave"],
+      "patientPhone": ["(323) 222-1440"]
+    },
+    {
+      "planName": "CRI-SR",
+      "billingInfo": {
+        "name": "CRI-Help Inc",
+        "department": "Socorro Residential",
+        "address": "11027 Burbank Blvd.",
+        "city": "North Hollywood, CA 91605",
+        "phone": "(818) 761-1652"
+      },
+      "doctor": [""],
+      "staffID": [""],
+      "patientAddress": ["4445 Burns Ave"],
+      "patientPhone": [""]
+    },
+    {
+      "planName": "TP",
+      "billingInfo": {
+        "name": "The Teen Project",
+        "department": "",
+        "address": "8140 Sunland Blvd.",
+        "city": "Sun Valley, CA 91352",
+        "phone": "(818) 582-8832"
+      },
+      "doctor": [""],
+      "staffID": [""],
+      "patientAddress": ["8140 Sunland Blvd"],
+      "patientPhone": ["(818) 582-8832", "(818) 582-8839"]
+    },
+    {
+      "planName": "CRTP",
+      "billingInfo": {
+        "name": "CRTP",
+        "department": "",
+        "address": "8142 Sunland Blvd.",
+        "city": "Sun Valley, CA 91352",
+        "phone": "(818) 582-8832"
+      },
+      "doctor": ["Cho,Daniel"],
+      "staffID": [""],
+      "patientAddress": ["8142 Sunland Blvd", "CRTP 8142 Sunland Blvd"],
+      "patientPhone": [""]
+    }
+  ],
+  "price": {
+    "minCharge": "7",
+    "perPill": [
+      {
+        "fullName": "AMOXICILLIN 500 MG CAPSULE",
+        "drugNDC": "65862001705",
+        "price": "0.8"
+      },
+      {
+        "fullName": "SULFAMETHOXAZOLE-TMP DS TABLET",
+        "drugNDC": "65162027250",
+        "price": "1.14"
+      },
+      {
+        "fullName": "BUPRENORPHINE 2 MG TABLET SL",
+        "drugNDC": "00054017613",
+        "price": "3"
+      },
+      {
+        "fullName": "CEPHALEXIN 500 MG CAPSULE",
+        "drugNDC": "67877021905",
+        "price": "0.86"
+      },
+      {
+        "fullName": "CLINDAMYCIN HCL 300 MG CAPSULE",
+        "drugNDC": "65862018601",
+        "price": "0.95"
+      },
+      {
+        "fullName": "CLONIDINE HCL 0.1 MG TABLET",
+        "drugNDC": "00228212750",
+        "price": "0.3"
+      },
+      {
+        "fullName": "DIAZEPAM 10 MG TABLET",
+        "drugNDC": "00172392770",
+        "price": "0.36"
+      },
+      {
+        "fullName": "DICYCLOMINE 20 MG TABLET",
+        "drugNDC": "00527128210",
+        "price": "0.3"
+      },
+      {
+        "fullName": "DULOXETINE HCL DR 60 MG CAP",
+        "drugNDC": "57237001999",
+        "price": "1"
+      },
+      {
+        "fullName": "ESCITALOPRAM 10 MG TABLET",
+        "drugNDC": "43547028111",
+        "price": "0.65"
+      },
+      {
+        "fullName": "ESCITALOPRAM 20 MG TABLET",
+        "drugNDC": "43547028211",
+        "price": "0.75"
+      },
+      {
+        "fullName": "GABAPENTIN 100 MG CAPSULE",
+        "drugNDC": "67877022210",
+        "price": "0.47"
+      },
+      {
+        "fullName": "GABAPENTIN 300 MG CAPSULE",
+        "drugNDC": "67877022305",
+        "price": "0.57"
+      },
+      {
+        "fullName": "GABAPENTIN 600 MG TABLET",
+        "drugNDC": "65862052305",
+        "price": "0.67"
+      },
+      {
+        "fullName": "HYDROXYZINE HCL 25 MG TABLET",
+        "drugNDC": "23155050110",
+        "price": "0.6"
+      },
+      {
+        "fullName": "LAMOTRIGINE 100 MG TABLET",
+        "drugNDC": "65862022801",
+        "price": "0.73"
+      },
+      {
+        "fullName": "LEVETIRACETAM 500 MG TABLET",
+        "drugNDC": "31722053705",
+        "price": "0.55"
+      },
+      {
+        "fullName": "METHOCARBAMOL 500 MG TABLET",
+        "drugNDC": "70010075401",
+        "price": "0.4"
+      },
+      {
+        "fullName": "METHOCARBAMOL 750 MG TABLET",
+        "drugNDC": "70010077005",
+        "price": "0.5"
+      },
+      {
+        "fullName": "ONDANSETRON ODT 4 MG TABLET",
+        "drugNDC": "68462015713",
+        "price": "0.9"
+      },
+      {
+        "fullName": "OXAZEPAM 15 MG CAPSULE",
+        "drugNDC": "00228206910",
+        "price": "1.25"
+      },
+      {
+        "fullName": "PHENOBARBITAL 30 MG TABLET",
+        "drugNDC": "00143150005",
+        "price": "0.5"
+      },
+      {
+        "fullName": "PROPRANOLOL 10 MG TABLET",
+        "drugNDC": "69238207701",
+        "price": "0.8"
+      },
+      {
+        "fullName": "PROPRANOLOL 20 MG TABLET",
+        "drugNDC": "69238207807",
+        "price": "0.9"
+      },
+      {
+        "fullName": "QUETIAPINE FUMARATE 25 MG TAB",
+        "drugNDC": "67877024210",
+        "price": "0.6"
+      },
+      {
+        "fullName": "QUETIAPINE FUMARATE 50 MG TAB",
+        "drugNDC": "67877024910",
+        "price": "0.7"
+      },
+      {
+        "fullName": "RISPERIDONE 0.5 MG TABLET",
+        "drugNDC": "27241000350",
+        "price": "0.85"
+      },
+      {
+        "fullName": "RISPERIDONE 1 MG TABLET",
+        "drugNDC": "68382011405",
+        "price": "0.9"
+      },
+      {
+        "fullName": "SERTRALINE HCL 50 MG TABLET",
+        "drugNDC": "65862001205",
+        "price": "0.4"
+      },
+      {
+        "fullName": "SERTRALINE HCL 100 MG TABLET",
+        "drugNDC": "65862001305",
+        "price": "0.47"
+      },
+      {
+        "fullName": "TRAMADOL HCL 50 MG TABLET",
+        "drugNDC": "57664037718",
+        "price": "0.9"
+      },
+      {
+        "fullName": "OLANZAPINE 5 MG TABLET",
+        "drugNDC": "43598016430",
+        "price": "0.8"
+      }
+    ],
+    "batch": [
+      {
+        "fullName": "ALBUTEROL HFA 90 MCG INHALER",
+        "drugNDC": "00781729685",
+        "qty": ["6.7"],
+        "price": ["45"]
+      },
+      {
+        "fullName": "ALBUTEROL HFA 90 MCG INHALER",
+        "drugNDC": "00093317431",
+        "qty": ["8.5"],
+        "price": ["55"]
+      },
+      {
+        "fullName": "NALOXONE HCL 4 MG NASAL SPRAY",
+        "drugNDC": "45802081184",
+        "qty": ["2"],
+        "price": ["150"]
+      },
+      {
+        "fullName": "TRAZODONE 50 MG TABLET",
+        "drugNDC": "50111056003",
+        "qty": ["30", "60"],
+        "price": ["20", "30"]
+      }
+    ]
+  }
+}
