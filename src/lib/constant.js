@@ -151,7 +151,7 @@ export const printPaperBillColumns = [
   },
   {
     field: 'DrugName',
-    headerName: 'Drug Name',
+    headerName: 'Medication Name',
     headerClassName: 'printHeader',
     hideable: false,
     sortable: false,
@@ -239,10 +239,33 @@ export const createDateInfo = (date) => {
 // 한자리 수의 0이나 양의 정수일 경우 0을 추가한 문자열을 반환합니다.
 export const addZero = (num) => {
   if (num < 0 || !Number.isInteger(num)) {
-    throw new Error('the argument must be a positive integer or zero');
+    throw new Error('The argument must be a positive integer or zero.');
   }
   if (num > 9) {
     return Number(num).toString();
   }
   return '0' + Number(num).toString();
 };
+
+// 객체로 구성된 배열과 키값을 전달 받아 해당 키값의 값을 합산한 값을 반환합니다.
+// TODO: 필요할 경우 함수 보완하기
+export const sum = (array, key) => {
+  if (!(array instanceof Array)) {
+    throw new Error('The first argument must be an array.');
+  }
+  for (let i = 0; i < array.length; i++) {
+    if (typeof array[i] !== 'object' || array[i][key] === undefined) {
+      throw new Error(
+        'The array must consist of objects including the key value.',
+      );
+    }
+  }
+  return array.reduce((a, c) => a + Number(c[key]), 0);
+};
+
+/////////////////////////////////////////////////////////////////////////////
+// SORT 함수
+/////////////////////////////////////////////////////////////////////////////
+// 객체를 요소로 갖는 배열을 정렬하는 sort 함수
+export const compareKey = (key) => (a, b) =>
+  a[key] > b[key] ? 1 : a[key] < b[key] ? -1 : 0;

@@ -1,7 +1,12 @@
 import { createSlice } from '@reduxjs/toolkit';
 import Fuse from 'fuse.js';
 
-import { addZero, createDateInfo, requiredFields } from '../lib/constant';
+import {
+  addZero,
+  compareKey,
+  createDateInfo,
+  requiredFields,
+} from '../lib/constant';
 import { paperBillColumns } from '../lib/constant';
 import preset from './../lib/preset.json';
 
@@ -265,11 +270,11 @@ const paperBillSlice = createSlice({
     syncState: (state, action) => {},
     updateRowsArrays: (state, action) => {
       state.isLoading = true;
+      const { currentPlan, transferTo, rowsArrays, selectedRows, updatedRow } =
+        action.payload;
+      const copy = JSON.parse(JSON.stringify(rowsArrays));
       switch (action.payload.actionType) {
         case 'transfer':
-          const { currentPlan, transferTo, rowsArrays, selectedRows } =
-            action.payload;
-          const copy = JSON.parse(JSON.stringify(rowsArrays));
           selectedRows.forEach((selectedRow) => {
             const indexToBeTransferred = copy[currentPlan].findIndex(
               (rx) => rx.id === selectedRow.id,
@@ -278,9 +283,14 @@ const paperBillSlice = createSlice({
             copy[currentPlan].splice(indexToBeTransferred, 1);
             copy[transferTo].unshift(rxToBeTransferred);
           });
-          const compare = (key) => (a, b) =>
-            a[key] > b[key] ? 1 : a[key] < b[key] ? -1 : 0;
-          copy[transferTo].sort(compare('id'));
+          copy[transferTo].sort(compareKey('id'));
+          state.dataDisplay.rowsArrays = copy;
+          break;
+        case 'rowUpdate':
+          const indexToBeReplaced = copy[currentPlan].findIndex(
+            (rx) => rx.id === updatedRow.id,
+          );
+          copy[currentPlan][indexToBeReplaced] = updatedRow;
           state.dataDisplay.rowsArrays = copy;
           break;
         default:

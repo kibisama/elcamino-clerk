@@ -17,13 +17,14 @@ const style = {
   },
   invoiceDateBox: {
     display: 'flex',
-    minWidth: 150,
+    minWidth: 120,
     border: '1px solid',
     p: '0.2rem',
     fontSize: '0.8rem',
     fontWeight: 'bold',
   },
   invoiceDateAndNum: {
+    minWidth: 60,
     fontWeight: 'regular',
     pl: '0.5rem',
   },

@@ -7,7 +7,10 @@ import CustomTabPanel from '../../component/CustomTabPanel';
 import PaperBillToolbar from './PaperBillToolbar';
 
 import { paperBillColumns } from '../../lib/constant';
-import { setCurrentPlan } from '../../reduxjs@toolkit/paperBillSlice';
+import {
+  setCurrentPlan,
+  updateRowsArrays,
+} from '../../reduxjs@toolkit/paperBillSlice';
 
 //----------------------------Style----------------------------
 const style = {
@@ -37,6 +40,11 @@ const DataDisplay = () => {
     dataDisplay: { currentPlan, rowsArrays },
   } = useSelector((state) => state.paperBill);
   const dispatch = useDispatch();
+
+  // rowsArrays가 없거나 데이터가 없을 경우 undefined 반환
+  if (!rowsArrays || rowsArrays.length === 0) {
+    return;
+  }
 
   // 현재 탭을 변경하면 redux상태를 변경하는 함수 정의
   const handleTabChange = (event, planIndex) => {
@@ -107,13 +115,19 @@ const DataDisplay = () => {
     }
     // TODO: 해당 환자가 다른 보험으로 청구된 기록이 있는지 확인하여 표시.
   };
-  ///////////////////////////////////////////////////////////
 
-  // experimental
+  // 데이터 수정시 콜백함수 호출
+  const processRowUpdate = (updatedRow, originalRow) => {
+    const payload = {
+      actionType: 'rowUpdate',
+      currentPlan,
+      rowsArrays,
+      updatedRow,
+    };
+    dispatch(updateRowsArrays(payload));
+    return updatedRow;
+  };
 
-  if (!rowsArrays || rowsArrays.length === 0) {
-    return;
-  }
   return (
     <Box sx={style.container}>
       <Box sx={style.PlanTabs}>
@@ -145,6 +159,7 @@ const DataDisplay = () => {
               density="compact"
               disableColumnMenu={true}
               loading={isLoading}
+              processRowUpdate={processRowUpdate}
               getCellClassName={getCellClassName}
               getRowClassName={getRowClassName}
               checkboxSelection

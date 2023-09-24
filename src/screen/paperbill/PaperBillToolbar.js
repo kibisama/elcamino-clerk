@@ -39,10 +39,6 @@ const PaperBillToolbar = () => {
 
   const dispatch = useDispatch();
 
-  const buttonBaseProps = {
-    size: 'small',
-  };
-
   // Transfer
   const [selectedPlan, setSelectedPlan] = useState('');
   const [anchorPlanSelectPopper, setAnchorPlanSelectPopper] = useState(null);

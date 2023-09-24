@@ -6,6 +6,7 @@ import CustomTabPanel from '../component/CustomTabPanel';
 import PaperBill from './PaperBill';
 
 import HomeIcon from '@mui/icons-material/Home';
+import CalculateIcon from '@mui/icons-material/Calculate';
 import ReceiptLongIcon from '@mui/icons-material/ReceiptLong';
 import AutoStoriesIcon from '@mui/icons-material/AutoStories';
 import SettingsIcon from '@mui/icons-material/Settings';
@@ -23,6 +24,7 @@ const style = {
     borderRight: 1,
     borderColor: 'divider',
     minWidth: '7.5rem',
+    maxWidth: '7.5rem',
     height: '100vh',
   },
   screen: {
@@ -47,6 +49,7 @@ const MainScreen = () => {
         sx={style.tabs}
       >
         <Tab icon={<HomeIcon />} label="Home" />
+        <Tab icon={<CalculateIcon />} label="Calculator" />
         <Tab icon={<ReceiptLongIcon />} label="Paper Bill" />
         <Tab icon={<AutoStoriesIcon />} label="CII Recon" />
         <Tab icon={<SettingsIcon />} label="Settings" />
@@ -56,12 +59,15 @@ const MainScreen = () => {
           Hello El Camino Pharmacy
         </CustomTabPanel>
         <CustomTabPanel value={modeValue} index={1}>
-          <PaperBill />
+          MyCalculator
         </CustomTabPanel>
         <CustomTabPanel value={modeValue} index={2}>
-          CII Recon
+          <PaperBill />
         </CustomTabPanel>
         <CustomTabPanel value={modeValue} index={3}>
+          CII Recon
+        </CustomTabPanel>
+        <CustomTabPanel value={modeValue} index={4}>
           Settings
         </CustomTabPanel>
       </Box>
