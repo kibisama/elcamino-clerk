@@ -43,7 +43,7 @@ export const paperBillColumns = [
   },
   {
     field: 'DoctorName',
-    headerName: 'Prescriber',
+    headerName: 'DoctorName',
     hideable: false,
     width: 100,
   },
@@ -68,7 +68,7 @@ export const paperBillColumns = [
   },
   {
     field: 'PatPAy',
-    headerName: 'Cost',
+    headerName: 'PatPAy',
     hideable: false,
     width: 81,
     type: 'number',
@@ -79,7 +79,7 @@ export const paperBillColumns = [
 
   {
     field: 'PlanName',
-    headerName: 'Plan',
+    headerName: 'PlanName',
     width: 70,
   },
   {
@@ -89,7 +89,7 @@ export const paperBillColumns = [
   },
   {
     field: 'patientPhone',
-    headerName: 'PatientPhone',
+    headerName: 'patientPhone',
     width: 123,
   },
   {
@@ -117,7 +117,7 @@ export const paperBillColumns = [
 export const printPaperBillColumns = [
   {
     field: 'RxNumber',
-    headerName: 'RxNumber',
+    headerName: 'Rx Number',
     headerClassName: 'printHeader',
     hideable: false,
     sortable: false,
@@ -125,7 +125,7 @@ export const printPaperBillColumns = [
   },
   {
     field: 'RxDate',
-    headerName: 'RxDate',
+    headerName: 'Rx Date',
     headerClassName: 'printHeader',
     hideable: false,
     sortable: false,
@@ -133,7 +133,7 @@ export const printPaperBillColumns = [
   },
   {
     field: 'PatientName',
-    headerName: 'PatientName',
+    headerName: 'Patient Name',
     headerClassName: 'printHeader',
     hideable: false,
     sortable: false,
@@ -151,7 +151,7 @@ export const printPaperBillColumns = [
   },
   {
     field: 'DrugName',
-    headerName: 'DrugName',
+    headerName: 'Drug Name',
     headerClassName: 'printHeader',
     hideable: false,
     sortable: false,
@@ -160,7 +160,7 @@ export const printPaperBillColumns = [
   },
   {
     field: 'RxQty',
-    headerName: 'RxQty',
+    headerName: 'Rx Qty',
     headerClassName: 'printHeader',
     hideable: false,
     sortable: false,
@@ -173,9 +173,76 @@ export const printPaperBillColumns = [
     headerName: 'Cost',
     hideable: false,
     sortable: false,
-    width: 81,
+    width: 60,
     type: 'number',
     headerAlign: 'right',
     align: 'right',
   },
 ];
+
+// functions
+export const getMonthName = (month) => {
+  switch (month) {
+    case 0:
+      month = 'Jan';
+      break;
+    case 1:
+      month = 'Feb';
+      break;
+    case 2:
+      month = 'Mar';
+      break;
+    case 3:
+      month = 'Apr';
+      break;
+    case 4:
+      month = 'May';
+      break;
+    case 5:
+      month = 'Jun';
+      break;
+    case 6:
+      month = 'Jul';
+      break;
+    case 7:
+      month = 'Aug';
+      break;
+    case 8:
+      month = 'Sep';
+      break;
+    case 9:
+      month = 'Oct';
+      break;
+    case 10:
+      month = 'Nov';
+      break;
+    case 11:
+      month = 'Dec';
+      break;
+    default:
+      month = 'Invalid month';
+  }
+  return month;
+};
+export const createDateInfo = (date) => {
+  if (!(date instanceof Date)) {
+    throw new Error('the argument must be instanceof Date');
+  }
+  return {
+    month: date.getMonth() + 1,
+    monthName: getMonthName(date.getMonth()),
+    date: date.getDate(),
+    year: date.getFullYear(),
+  };
+};
+
+// 한자리 수의 0이나 양의 정수일 경우 0을 추가한 문자열을 반환합니다.
+export const addZero = (num) => {
+  if (num < 0 || !Number.isInteger(num)) {
+    throw new Error('the argument must be a positive integer or zero');
+  }
+  if (num > 9) {
+    return Number(num).toString();
+  }
+  return '0' + Number(num).toString();
+};

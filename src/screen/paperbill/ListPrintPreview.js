@@ -10,9 +10,12 @@ import ListHeader from './ListHeader';
 const style = {
   container: {
     width: '1054px',
-    height: '816px',
     flexGrow: 1,
     '@media print': {
+      p: 0,
+      m: 0,
+      overflow: 'hidden',
+      height: '100vh',
       '@page': {
         size: 'letter landscape',
       },
@@ -20,6 +23,9 @@ const style = {
     '& .MuiDataGrid-root': {
       border: 'none',
     },
+  },
+  printMargin: {
+    m: '1rem',
   },
   dataGrid: {
     my: '1rem',
@@ -40,6 +46,7 @@ const ListPrintPreview = ({ ...props }) => {
   const planId = useParams().planId;
 
   const content = useSelector((state) => state.print.paperBill);
+  console.log(content);
 
   if (!content) {
     return;
@@ -53,25 +60,33 @@ const ListPrintPreview = ({ ...props }) => {
     rows[i] = copy.splice(0, 25);
   }
 
-  return rows.map((row, i) => (
-    <Box key={i} sx={{ ...style.container, ...sx }}>
-      <ListHeader
-        date={content.invoiceDate}
-        page={{ max: totalPages, current: i + 1 }}
-        planIndex={planId}
-      />
-      <DataGrid
-        sx={style.dataGrid}
-        rows={rows[i]}
-        columns={printPaperBillColumns}
-        columnHeaderHeight={45}
-        rowHeight={30}
-        density="compact"
-        disableColumnMenu={true}
-        hideFooter={true}
-      />
-    </Box>
-  ));
+  return (
+    <>
+      {rows.map((row, i) => (
+        <Box key={i} sx={{ ...style.container, ...sx }}>
+          <Box sx={style.printMargin}>
+            <ListHeader
+              date={content.invoiceDate}
+              lastRxDate={content.lastRxDate}
+              invoiceNum={content.invoiceNumArrays[planId]}
+              page={{ max: totalPages, current: i + 1 }}
+              planIndex={planId}
+            />
+            <DataGrid
+              sx={style.dataGrid}
+              rows={rows[i]}
+              columns={printPaperBillColumns}
+              columnHeaderHeight={45}
+              rowHeight={30}
+              density="compact"
+              disableColumnMenu={true}
+              hideFooter={true}
+            />
+          </Box>
+        </Box>
+      ))}
+    </>
+  );
 };
 
 export default ListPrintPreview;

@@ -15,7 +15,8 @@
         "department": "Pfleger Detox",
         "address": "11027 Burbank Blvd.",
         "city": "North Hollywood, CA 91605",
-        "phone": "(818) 761-1652"
+        "phone": "(818) 761-1652",
+        "invoiceCode": "CPD"
       },
       "doctor": ["Burstin,Charles"],
       "staffID": ["1110185", "1132008", "1030913"],
@@ -29,7 +30,8 @@
         "department": "Pfleger Residential",
         "address": "11027 Burbank Blvd.",
         "city": "North Hollywood, CA 91605",
-        "phone": "(818) 761-1652"
+        "phone": "(818) 761-1652",
+        "invoiceCode": "CPR"
       },
       "doctor": [""],
       "staffID": [""],
@@ -43,7 +45,8 @@
         "department": "Socorro Detox",
         "address": "11027 Burbank Blvd.",
         "city": "North Hollywood, CA 91605",
-        "phone": "(818) 761-1652"
+        "phone": "(818) 761-1652",
+        "invoiceCode": "CSD"
       },
       "doctor": ["Milam,Mallory"],
       "staffID": [""],
@@ -57,7 +60,8 @@
         "department": "Socorro Residential",
         "address": "11027 Burbank Blvd.",
         "city": "North Hollywood, CA 91605",
-        "phone": "(818) 761-1652"
+        "phone": "(818) 761-1652",
+        "invoiceCode": "CSR"
       },
       "doctor": [""],
       "staffID": [""],
@@ -71,7 +75,8 @@
         "department": "",
         "address": "8140 Sunland Blvd.",
         "city": "Sun Valley, CA 91352",
-        "phone": "(818) 582-8832"
+        "phone": "(818) 582-8832",
+        "invoiceCode": "TTP"
       },
       "doctor": [""],
       "staffID": [""],
@@ -85,7 +90,8 @@
         "department": "",
         "address": "8142 Sunland Blvd.",
         "city": "Sun Valley, CA 91352",
-        "phone": "(818) 582-8832"
+        "phone": "(818) 582-8832",
+        "invoiceCode": "CTP"
       },
       "doctor": ["Cho,Daniel"],
       "staffID": [""],

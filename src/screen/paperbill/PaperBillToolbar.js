@@ -23,7 +23,15 @@ const buttonBaseProps = {
 //-------------------------------------------------------------
 const PaperBillToolbar = () => {
   const {
-    dataDisplay: { invoiceDate, currentPlan, rowsArrays, savedState },
+    dataDisplay: {
+      invoiceDate,
+      invoiceDueDate,
+      lastRxDate,
+      invoiceNumArrays,
+      currentPlan,
+      rowsArrays,
+      savedState,
+    },
     uploadCSV: { plans },
   } = useSelector((state) => state.paperBill);
   const apiRef = useGridApiContext();
@@ -63,7 +71,15 @@ const PaperBillToolbar = () => {
   };
   // Print
   const handlePrintList = () => {
-    dispatch(setPaperBill({ rowsArrays, invoiceDate }));
+    dispatch(
+      setPaperBill({
+        rowsArrays,
+        invoiceDate,
+        invoiceDueDate,
+        lastRxDate,
+        invoiceNumArrays,
+      }),
+    );
     window.open(`/print/paperbill/${currentPlan}`, '_blank');
     window.open(`/print/paperbill/invoice/${currentPlan}`, '_blank');
   };

@@ -17,6 +17,7 @@ const style = {
   },
   invoiceDateBox: {
     display: 'flex',
+    minWidth: 150,
     border: '1px solid',
     p: '0.2rem',
     fontSize: '0.8rem',
@@ -26,14 +27,20 @@ const style = {
     fontWeight: 'regular',
     pl: '0.5rem',
   },
+  facilityName: {
+    fontSize: '1rem',
+    fontWeight: 'bold',
+  },
+  listDate: {
+    fontSize: '0.9rem',
+  },
 };
 //-------------------------------------------------------------
 
 const ListHeader = ({ ...props }) => {
-  const { date, page, planIndex } = props;
+  const { date, lastRxDate, invoiceNum, page, planIndex } = props;
   const { storeInfo, plans } = useSelector((state) => state.paperBill.settings);
   const billingInfo = plans[planIndex].billingInfo;
-  console.log(billingInfo);
   return (
     <Typography>
       <Grid sx={style.container} container>
@@ -43,9 +50,18 @@ const ListHeader = ({ ...props }) => {
           <Box>{storeInfo.city}</Box>
           <Box>{storeInfo.phone}</Box>
         </Grid>
-        <Grid display="flex" justifyContent="center" alignItems="end" xs={4}>
-          <Box>
+        <Grid
+          display="flex"
+          flexDirection="column"
+          justifyContent="end"
+          alignItems="center"
+          xs={4}
+        >
+          <Box sx={style.facilityName}>
             {billingInfo.name} {billingInfo.department}
+          </Box>
+          <Box sx={style.listDate}>
+            {lastRxDate.monthName}.{lastRxDate.year} Rx List
           </Box>
         </Grid>
         <Grid
@@ -69,7 +85,7 @@ const ListHeader = ({ ...props }) => {
               sx={{ ...style.invoiceDateBox, borderLeft: 'none' }}
             >
               INVOICE
-              <Box sx={style.invoiceDateAndNum}>CRI999999</Box>
+              <Box sx={style.invoiceDateAndNum}>{invoiceNum}</Box>
             </Box>
           </Box>
         </Grid>

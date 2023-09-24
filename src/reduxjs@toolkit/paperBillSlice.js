@@ -1,7 +1,7 @@
 import { createSlice } from '@reduxjs/toolkit';
 import Fuse from 'fuse.js';
 
-import { requiredFields } from '../lib/constant';
+import { addZero, createDateInfo, requiredFields } from '../lib/constant';
 import { paperBillColumns } from '../lib/constant';
 import preset from './../lib/preset.json';
 
@@ -17,7 +17,6 @@ const paperBillSlice = createSlice({
       data: null,
       index: null,
       plans: null,
-      lastestDate: null,
       result: {
         categorizedArrays: null,
         candidate: null,
@@ -29,6 +28,9 @@ const paperBillSlice = createSlice({
     },
     dataDisplay: {
       invoiceDate: null,
+      invoiceDueDate: null,
+      lastRxDate: null,
+      invoiceNumArrays: null,
       currentPlan: 0,
       rowsArrays: null,
       savedState: {
@@ -96,6 +98,33 @@ const paperBillSlice = createSlice({
         pool[i][index[3]] = String(pool[i][index[3]]).toUpperCase();
         pool[i][pool[i].length] = i + 1;
       }
+
+      // 현재 날짜등을 기록한 객체를 만들어 상태에 저장합니다.
+      const now = Date.now();
+      const today = new Date(now);
+      const dueDate = new Date(now + 2629800000);
+      const invoiceDate = createDateInfo(today);
+      const invoiceDueDate = createDateInfo(dueDate);
+      const rxDates = new Set();
+      pool.forEach((rx) => {
+        rxDates.add(new Date(rx[index[1]]).valueOf());
+      });
+      const lastRxDate = createDateInfo(new Date(Math.max(...rxDates)));
+      state.dataDisplay.invoiceDate = invoiceDate;
+      state.dataDisplay.invoiceDueDate = invoiceDueDate;
+      state.dataDisplay.lastRxDate = lastRxDate;
+
+      // 각 invoice 넘버를 생성해 배열로 저장합니다.
+      const invoiceNumArrays = [];
+      settings.plans.forEach((plan) => {
+        invoiceNumArrays.push(
+          plan.billingInfo.invoiceCode +
+            addZero(lastRxDate.month) +
+            addZero(lastRxDate.date) +
+            Number(lastRxDate.year).toString(),
+        );
+      });
+      state.dataDisplay.invoiceNumArrays = invoiceNumArrays;
 
       // filterAndPull 함수를 정의합니다. pool내 Rx들 중 비교값과 같은 Rx를 찾아 pool에서 제거하고 다른 배열 뒤에 추가합니다.
       // 인수로 순서대로 비교값(비교함수), 인덱스, 결과(배열)을 담을 배열을 전달 합니다. 결과를 담은 배열을 반환합니다.
@@ -224,17 +253,8 @@ const paperBillSlice = createSlice({
           rows[i][j] = row;
         });
       }
-
-      // 현재 날짜를 기록합니다.
-      const today = new Date();
-      const invoiceDate = {
-        month: today.getMonth() + 1,
-        date: today.getDate(),
-        year: today.getFullYear(),
-      };
-      state.dataDisplay.invoiceDate = invoiceDate;
-
       state.dataDisplay.rowsArrays = rows;
+
       state.isLoading = false;
       state.uploadCSV.isProcessed = true;
     },
