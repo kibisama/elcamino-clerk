@@ -23,6 +23,7 @@ const buttonBaseProps = {
 //-------------------------------------------------------------
 const PaperBillToolbar = () => {
   const {
+    settings,
     dataDisplay: {
       invoiceDate,
       invoiceDueDate,
@@ -51,10 +52,10 @@ const PaperBillToolbar = () => {
   const onClickTransfer = () => {
     const payload = {
       actionType: 'transfer',
-      currentPlan: currentPlan,
+      currentPlan,
       transferTo: selectedPlan,
-      rowsArrays: rowsArrays,
-      selectedRows: selectedRows,
+      rowsArrays,
+      selectedRows,
     };
     dispatch(updateRowsArrays(payload));
   };
@@ -74,9 +75,12 @@ const PaperBillToolbar = () => {
         invoiceDueDate,
         lastRxDate,
         invoiceNumArrays,
+        settings,
       }),
     );
-    window.open(`/print/paperbill/${currentPlan}`, '_blank');
+    if (rowsArrays[currentPlan].length > 0) {
+      window.open(`/print/paperbill/${currentPlan}`, '_blank');
+    }
     window.open(`/print/paperbill/invoice/${currentPlan}`, '_blank');
   };
 

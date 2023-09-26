@@ -4,7 +4,9 @@ import Grid from '@mui/material/Unstable_Grid2';
 
 //----------------------------Style----------------------------
 const style = {
-  container: {},
+  container: {
+    pt: '1rem',
+  },
   totalCountBox: {
     display: 'flex',
     border: '1px solid',
@@ -78,7 +80,7 @@ const ListFooter = ({ ...props }) => {
   const { dueDate, subTotals, grandTotal, page, totalCount } = props;
   const isLastPage = Boolean(page.max === page.current);
   return (
-    <Typography>
+    <Typography component="span">
       <Grid sx={style.container} container>
         {isLastPage ? (
           <>

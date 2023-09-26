@@ -5,6 +5,7 @@ import { DataGrid } from '@mui/x-data-grid';
 
 import CustomTabPanel from '../../component/CustomTabPanel';
 import PaperBillToolbar from './PaperBillToolbar';
+import CustomNoRowsOverlay from '../../component/CustomNoRowsOverlay';
 
 import { paperBillColumns } from '../../lib/constant';
 import {
@@ -13,17 +14,20 @@ import {
 } from '../../reduxjs@toolkit/paperBillSlice';
 
 //----------------------------Style----------------------------
+import { blue, grey, green, orange } from '@mui/material/colors';
 const style = {
-  container: {
-    width: '100%',
-  },
+  container: {},
   PlanTabs: { borderBottom: 1, borderColor: 'divider' },
   DataGrid: {
-    '& .rowLabelOnly': {
-      bgcolor: 'text.disabled',
+    minWidth: '86rem',
+    '& .rowPlanPatientsWithIns': {
+      bgcolor: green[200],
     },
     '& .rowFacilityStaff': {
-      bgcolor: 'warning.light',
+      bgcolor: orange[200],
+    },
+    '& .rowLabelOnly': {
+      bgcolor: grey[400],
     },
     '& .cellPriceError': {
       color: 'error.main',
@@ -37,7 +41,7 @@ const DataDisplay = () => {
     isLoading,
     settings,
     uploadCSV: { plans },
-    dataDisplay: { currentPlan, rowsArrays },
+    dataDisplay: { currentPlan, planPatientsWithIns, rowsArrays },
   } = useSelector((state) => state.paperBill);
   const dispatch = useDispatch();
 
@@ -102,6 +106,7 @@ const DataDisplay = () => {
         }
       });
     });
+
     switch (true) {
       // RxNotes에 Label 단어를 포함 할 경우
       case params.row.RxStatus === 'DISCONTINUED' &&
@@ -110,6 +115,9 @@ const DataDisplay = () => {
       // facility staff 표시
       case staffID.has(params.row.PatientID):
         return 'rowFacilityStaff';
+      case planPatientsWithIns.has(params.row.PatientID) &&
+        plans.includes(params.row.PlanName):
+        return 'rowPlanPatientsWithIns';
       default:
         return '';
     }
@@ -137,37 +145,49 @@ const DataDisplay = () => {
           ))}
         </Tabs>
       </Box>
-      {plans.map((plan, i) => (
-        <CustomTabPanel value={currentPlan} index={i} key={i}>
-          <Box sx={style.DataGrid}>
-            <DataGrid
-              rows={rowsArrays[i]}
-              columns={paperBillColumns}
-              initialState={{
-                columns: {
-                  columnVisibilityModel: {
-                    DrugNDC: false,
-                    PatientPhone: false,
-                    PatientID: false,
+      {plans.map((plan, i) => {
+        let rowHeight = 30;
+        let density = 'compact';
+        if (rowsArrays[i].length === 0) {
+          rowHeight = 100;
+          density = 'comfortable';
+        }
+        return (
+          <CustomTabPanel value={currentPlan} index={i} key={i}>
+            <Box sx={style.DataGrid}>
+              <DataGrid
+                autoHeight
+                rows={rowsArrays[i]}
+                columns={paperBillColumns}
+                initialState={{
+                  columns: {
+                    columnVisibilityModel: {
+                      DrugNDC: false,
+                      PatientPhone: false,
+                      PatientID: false,
+                    },
                   },
-                },
-              }}
-              slots={{ toolbar: PaperBillToolbar }}
-              slotProps={{ toolbar: { selectedRows: null } }}
-              columnHeaderHeight={45}
-              rowHeight={30}
-              density="compact"
-              disableColumnMenu={true}
-              loading={isLoading}
-              processRowUpdate={processRowUpdate}
-              getCellClassName={getCellClassName}
-              getRowClassName={getRowClassName}
-              checkboxSelection
-              disableRowSelectionOnClick
-            />
-          </Box>
-        </CustomTabPanel>
-      ))}
+                }}
+                slots={{
+                  toolbar: PaperBillToolbar,
+                  noRowsOverlay: CustomNoRowsOverlay,
+                }}
+                slotProps={{ toolbar: { selectedRows: null } }}
+                columnHeaderHeight={45}
+                rowHeight={rowHeight}
+                density={density}
+                disableColumnMenu={true}
+                loading={isLoading}
+                processRowUpdate={processRowUpdate}
+                getCellClassName={getCellClassName}
+                getRowClassName={getRowClassName}
+                checkboxSelection
+                disableRowSelectionOnClick
+              />
+            </Box>
+          </CustomTabPanel>
+        );
+      })}
     </Box>
   );
 };

@@ -37,6 +37,7 @@ const paperBillSlice = createSlice({
       lastRxDate: null,
       invoiceNumArrays: null,
       currentPlan: 0,
+      planPatientsWithIns: null,
       rowsArrays: null,
       savedState: {
         count: 0,
@@ -118,7 +119,6 @@ const paperBillSlice = createSlice({
       state.dataDisplay.invoiceDate = invoiceDate;
       state.dataDisplay.invoiceDueDate = invoiceDueDate;
       state.dataDisplay.lastRxDate = lastRxDate;
-
       // 각 invoice 넘버를 생성해 배열로 저장합니다.
       const invoiceNumArrays = [];
       settings.plans.forEach((plan) => {
@@ -200,6 +200,18 @@ const paperBillSlice = createSlice({
           planPatients.add(categorizedArrays[i][j][index[13]]);
         }
       }
+      // plan 에 포함된 환자의patientID는 data에서 다시한번 검색해 보험청구 기록이 있는지 확인합니다.
+      const planPatientsWithIns = new Set();
+      planPatients.forEach((patientID) => {
+        const filtered = data.filter(
+          (rx) => rx[index[13]] === patientID && rx[index[12]] === 'BILLED',
+        );
+        filtered.forEach((rx) => {
+          planPatientsWithIns.add(rx[index[13]]);
+        });
+      });
+      state.dataDisplay.planPatientsWithIns = planPatientsWithIns;
+
       // fuzzy 알고리즘을 통해 facility 주소와 비슷한 주소의 rx를 검색합니다.
       const fuseOptions = {
         includeScore: true,

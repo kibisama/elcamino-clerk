@@ -14,7 +14,7 @@ import CancelIcon from '@mui/icons-material/Cancel';
 //----------------------------Style----------------------------
 const style = {
   container: {
-    minWidth: 150,
+    minWidth: 160,
     border: '1px solid gray',
     display: 'flex',
     flexDirection: 'column',

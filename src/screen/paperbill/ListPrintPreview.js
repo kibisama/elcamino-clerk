@@ -30,6 +30,7 @@ const style = {
     m: '1rem',
   },
   dataGrid: {
+    // minWidth: '1022px',
     my: '1rem',
     fontSize: '0.7rem',
     '& .MuiDataGrid-columnHeaders': {

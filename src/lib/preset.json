@@ -5,7 +5,8 @@
     "address": "10940 Victory Blvd.",
     "city": "North Hollywood, CA 91606",
     "phone": "(818) 763-4334",
-    "fax": "(818) 763-4610"
+    "fax": "(818) 763-4610",
+    "email": "elcaminopharmacy@gmail.com"
   },
   "plans": [
     {
@@ -19,7 +20,7 @@
         "invoiceCode": "CPD"
       },
       "doctor": ["Burstin,Charles"],
-      "staffID": ["1110185", "1132008", "1030913"],
+      "staffID": ["1110185", "1132008", "1030913", "1044914"],
       "patientAddress": ["Detox 11027 Burbank Blvd"],
       "patientPhone": ["(818) 761-1652", "(818) 985-8323"]
     },

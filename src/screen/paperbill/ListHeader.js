@@ -40,10 +40,12 @@ const style = {
 
 const ListHeader = ({ ...props }) => {
   const { date, lastRxDate, invoiceNum, page, planIndex } = props;
-  const { storeInfo, plans } = useSelector((state) => state.paperBill.settings);
+  const { storeInfo, plans } = useSelector(
+    (state) => state.print.paperBill.settings,
+  );
   const billingInfo = plans[planIndex].billingInfo;
   return (
-    <Typography>
+    <Typography component="span">
       <Grid sx={style.container} container>
         <Grid sx={style.storeInfo} xs={4}>
           <Box>{storeInfo.name}</Box>
