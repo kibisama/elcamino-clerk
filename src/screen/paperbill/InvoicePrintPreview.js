@@ -152,6 +152,12 @@ const style = {
     display: 'flex',
     justifyContent: 'flex-end',
   },
+  payTo: {
+    display: 'flex',
+    flexDirection: 'column',
+    alignItems: 'flex-end',
+    pr: '0.5rem',
+  },
   pleaseContact: {
     fontWeight: 400,
     fontSize: '0.8rem',
@@ -375,6 +381,14 @@ const InvoicePrintPreview = () => {
                 <Box sx={style.grandGrandTotalBox}>
                   <Box sx={style.dollar}>$</Box>
                   <Box sx={style.grandGrandTotal}>{grandGrandTotal}</Box>
+                </Box>
+              </Box>
+              <Box sx={style.payTo}>
+                <Box sx={{ fontSize: '0.8rem' }}>
+                  Make all checks payable to
+                </Box>
+                <Box sx={{ fontSize: '0.9rem', fontWeight: 600 }}>
+                  {content.settings.storeInfo.name}
                 </Box>
               </Box>
             </Grid>
