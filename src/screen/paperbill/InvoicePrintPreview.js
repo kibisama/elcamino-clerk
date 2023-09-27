@@ -182,9 +182,11 @@ const InvoicePrintPreview = () => {
   if (Number(grandTotal) > 0) {
     Object.assign(firstItem, {
       id: 1,
-      description: `Prescriptions for ${content.lastRxDate.monthName} ${
-        content.lastRxDate.year
-      }${billingInfo.department !== '' ? ` (${billingInfo.department})` : ''}`,
+      description: `Prescriptions for ${
+        content.selectedBillingPeriod.monthName
+      } ${content.selectedBillingPeriod.year}${
+        billingInfo.department !== '' ? ` (${billingInfo.department})` : ''
+      }`,
       amount: grandTotal,
     });
   }

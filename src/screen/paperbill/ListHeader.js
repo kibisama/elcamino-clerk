@@ -39,7 +39,7 @@ const style = {
 //-------------------------------------------------------------
 
 const ListHeader = ({ ...props }) => {
-  const { date, lastRxDate, invoiceNum, page, planIndex } = props;
+  const { date, billingPeriod, invoiceNum, page, planIndex } = props;
   const { storeInfo, plans } = useSelector(
     (state) => state.print.paperBill.settings,
   );
@@ -64,7 +64,7 @@ const ListHeader = ({ ...props }) => {
             {billingInfo.name} {billingInfo.department}
           </Box>
           <Box sx={style.listDate}>
-            {lastRxDate.monthName}.{lastRxDate.year} Rx List
+            {billingPeriod.monthName} {billingPeriod.year} Rx List
           </Box>
         </Grid>
         <Grid

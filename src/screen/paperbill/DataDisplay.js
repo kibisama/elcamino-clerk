@@ -115,13 +115,13 @@ const DataDisplay = () => {
       // facility staff 표시
       case staffID.has(params.row.PatientID):
         return 'rowFacilityStaff';
-      case planPatientsWithIns.has(params.row.PatientID) &&
-        plans.includes(params.row.PlanName):
+      case planPatientsWithIns.findIndex(
+        (patient) => patient.patientID === params.row.PatientID,
+      ) && plans.includes(params.row.PlanName):
         return 'rowPlanPatientsWithIns';
       default:
         return '';
     }
-    // TODO: 해당 환자가 다른 보험으로 청구된 기록이 있는지 확인하여 표시.
   };
 
   // 데이터 수정시 콜백함수 호출

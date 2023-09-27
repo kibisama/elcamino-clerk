@@ -5,6 +5,7 @@ import {
   addZero,
   compareKey,
   createDateInfo,
+  getMonthName,
   requiredFields,
 } from '../lib/constant';
 import { paperBillColumns } from '../lib/constant';
@@ -22,6 +23,7 @@ const paperBillSlice = createSlice({
       data: null,
       index: null,
       plans: null,
+      billingPeriod: null,
       result: {
         categorizedArrays: null,
         candidate: null,
@@ -34,15 +36,11 @@ const paperBillSlice = createSlice({
     dataDisplay: {
       invoiceDate: null,
       invoiceDueDate: null,
-      lastRxDate: null,
+      selectedBillingPeriod: null,
       invoiceNumArrays: null,
       currentPlan: 0,
       planPatientsWithIns: null,
       rowsArrays: null,
-      savedState: {
-        count: 0,
-        initialState: null,
-      },
     },
   },
   reducers: {
@@ -66,6 +64,31 @@ const paperBillSlice = createSlice({
 
       // csv 파일 헤더를 제외한 배열 데이터를 보관합니다.
       action.payload.shift();
+
+      // Billing period를 정의합니다.
+      const rxDates = new Set();
+      action.payload.forEach((rx) => {
+        const dateObject = new Date(rx[_index[1]]);
+        rxDates.add(
+          JSON.stringify({
+            // 객체는 참조값 이므로 JSON 문자열로 반환하여 Set에 add합니다.
+            month: dateObject.getMonth(),
+            year: dateObject.getFullYear(),
+          }),
+        );
+      });
+      const billingPeriod = [];
+      rxDates.forEach((date) => {
+        const result = JSON.parse(date);
+        billingPeriod.push({
+          month: result.month + 1,
+          monthName: getMonthName(result.month),
+          year: result.year,
+        });
+      });
+
+      state.uploadCSV.billingPeriod = billingPeriod;
+
       state.uploadCSV.data = action.payload;
 
       state.uploadCSV.isLoaded = true;
@@ -74,6 +97,7 @@ const paperBillSlice = createSlice({
       // csv 파일 업로드 상태와 에러메시지를 초기화 합니다.
       state.uploadCSV.isLoaded = false;
       state.uploadCSV.errorMsg = null;
+      state.uploadCSV.billingPeriod = null;
     },
     processCSV: (state, action) => {
       state.isLoading = true;
@@ -81,7 +105,7 @@ const paperBillSlice = createSlice({
       // UploadCSV 컴포넌트에서 Run 버튼 클릭시 실행됩니다.
       // 이전 상태변경에 직접 접근이 불가능 하므로 payload로는 configs와 함께 data와 index가 다시 전달 됩니다.
       // configs가 없다면 preset을 이용합니다.
-      const { data, index, configs } = action.payload;
+      const { data, index, configs, billingPeriod } = action.payload;
       const settings = configs ?? preset;
       state.settings = settings;
 
@@ -89,12 +113,22 @@ const paperBillSlice = createSlice({
       //   0: RxNumber 1: RxDate 2: PatientName 3: DoctorName 4: DrugName 5: RxQty 6: PatPAy 7: PlanName 8: DrugNDC
       //   9: PatientStreet 10: patientPhone 11: RxStatus 12: RxStatusFin 13: PatientID 14: RxNotes 15: PatNotes
 
+      // 전달 받은 billingPeriod에 따라 data를 filter합니다.
+      state.dataDisplay.selectedBillingPeriod = billingPeriod;
+      const periodData = data.filter((rx) => {
+        const dateObject = new Date(rx[index[1]]);
+        return (
+          dateObject.getMonth() + 1 === billingPeriod.month &&
+          dateObject.getFullYear() === billingPeriod.year
+        );
+      });
+
       // 가장먼저 pool 배열을 선언하고 데이터 배열을 복사합니다.
       // 데이터를 일관성 있게 하기 위하여 DoctorName은 모두 대문자로 변환하고 일부 시간정보가 포함된 RxDate에서 시간을 제외합니다.
       // 또한 추적을 위해 고유 number i + 1을 배열의 끝에 추가합니다.
       const pool = [];
-      for (let i = 0; i < data.length; i++) {
-        pool[i] = JSON.parse(JSON.stringify(data[i]));
+      for (let i = 0; i < periodData.length; i++) {
+        pool[i] = JSON.parse(JSON.stringify(periodData[i]));
         if (String(pool[i][index[1]]).includes(' ')) {
           pool[i][index[1]] = String(pool[i][index[1]]).substring(
             0,
@@ -118,7 +152,6 @@ const paperBillSlice = createSlice({
       const lastRxDate = createDateInfo(new Date(Math.max(...rxDates)));
       state.dataDisplay.invoiceDate = invoiceDate;
       state.dataDisplay.invoiceDueDate = invoiceDueDate;
-      state.dataDisplay.lastRxDate = lastRxDate;
       // 각 invoice 넘버를 생성해 배열로 저장합니다.
       const invoiceNumArrays = [];
       settings.plans.forEach((plan) => {
@@ -201,15 +234,27 @@ const paperBillSlice = createSlice({
         }
       }
       // plan 에 포함된 환자의patientID는 data에서 다시한번 검색해 보험청구 기록이 있는지 확인합니다.
-      const planPatientsWithIns = new Set();
+      const _planPatientsWithIns = new Set();
       planPatients.forEach((patientID) => {
         const filtered = data.filter(
           (rx) => rx[index[13]] === patientID && rx[index[12]] === 'BILLED',
         );
         filtered.forEach((rx) => {
-          planPatientsWithIns.add(rx[index[13]]);
+          const insurance = new Set();
+          insurance.add(rx[index[7]]);
+          const insuranceArr = Array.from(insurance);
+          _planPatientsWithIns.add(
+            JSON.stringify({
+              patientID: rx[index[13]],
+              planNames: insuranceArr,
+            }),
+          );
         });
       });
+      const planPatientsWithIns = [];
+      _planPatientsWithIns.forEach((json) =>
+        planPatientsWithIns.push(JSON.parse(json)),
+      );
       state.dataDisplay.planPatientsWithIns = planPatientsWithIns;
 
       // fuzzy 알고리즘을 통해 facility 주소와 비슷한 주소의 rx를 검색합니다.

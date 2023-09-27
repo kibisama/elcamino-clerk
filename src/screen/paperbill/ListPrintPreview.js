@@ -74,7 +74,7 @@ const ListPrintPreview = ({ ...props }) => {
           <Box sx={style.printMargin}>
             <ListHeader
               date={content.invoiceDate}
-              lastRxDate={content.lastRxDate}
+              billingPeriod={content.selectedBillingPeriod}
               invoiceNum={content.invoiceNumArrays[planId]}
               page={{ max: totalPages, current: i + 1 }}
               planIndex={planId}

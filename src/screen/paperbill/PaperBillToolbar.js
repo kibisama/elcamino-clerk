@@ -27,11 +27,10 @@ const PaperBillToolbar = () => {
     dataDisplay: {
       invoiceDate,
       invoiceDueDate,
-      lastRxDate,
       invoiceNumArrays,
       currentPlan,
       rowsArrays,
-      savedState,
+      selectedBillingPeriod,
     },
     uploadCSV: { plans },
   } = useSelector((state) => state.paperBill);
@@ -73,7 +72,7 @@ const PaperBillToolbar = () => {
         rowsArrays,
         invoiceDate,
         invoiceDueDate,
-        lastRxDate,
+        selectedBillingPeriod,
         invoiceNumArrays,
         settings,
       }),
