@@ -106,6 +106,11 @@ const DataDisplay = () => {
         }
       });
     });
+    console.log(
+      planPatientsWithIns.findIndex(
+        (patient) => patient.patientID === params.row.PatientID,
+      ),
+    );
 
     switch (true) {
       // RxNotes에 Label 단어를 포함 할 경우
@@ -117,7 +122,7 @@ const DataDisplay = () => {
         return 'rowFacilityStaff';
       case planPatientsWithIns.findIndex(
         (patient) => patient.patientID === params.row.PatientID,
-      ) && plans.includes(params.row.PlanName):
+      ) > -1 && plans.includes(params.row.PlanName):
         return 'rowPlanPatientsWithIns';
       default:
         return '';
