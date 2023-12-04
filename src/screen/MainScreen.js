@@ -3,9 +3,12 @@ import { Box, Tab, Tabs } from '@mui/material';
 
 import CustomTabPanel from '../component/CustomTabPanel';
 
+import DrugDB from './DrugDB';
+import Inventory from './Inventory';
 import PaperBill from './PaperBill';
 
 import HomeIcon from '@mui/icons-material/Home';
+import MedicationIcon from '@mui/icons-material/Medication';
 import CalculateIcon from '@mui/icons-material/Calculate';
 import ReceiptLongIcon from '@mui/icons-material/ReceiptLong';
 import AutoStoriesIcon from '@mui/icons-material/AutoStories';
@@ -49,7 +52,8 @@ const MainScreen = () => {
         sx={style.tabs}
       >
         <Tab icon={<HomeIcon />} label="Home" />
-        <Tab icon={<CalculateIcon />} label="Calculator" />
+        <Tab icon={<MedicationIcon />} label="Drug DB" />
+        <Tab icon={<CalculateIcon />} label="Inventory" />
         <Tab icon={<ReceiptLongIcon />} label="Paper Bill" />
         <Tab icon={<AutoStoriesIcon />} label="CII Recon" />
         <Tab icon={<SettingsIcon />} label="Settings" />
@@ -59,15 +63,18 @@ const MainScreen = () => {
           Hello El Camino Pharmacy
         </CustomTabPanel>
         <CustomTabPanel value={modeValue} index={1}>
-          MyCalculator
+          <DrugDB />
         </CustomTabPanel>
         <CustomTabPanel value={modeValue} index={2}>
-          <PaperBill />
+          <Inventory />
         </CustomTabPanel>
         <CustomTabPanel value={modeValue} index={3}>
-          CII Recon
+          <PaperBill />
         </CustomTabPanel>
         <CustomTabPanel value={modeValue} index={4}>
+          CII Recon
+        </CustomTabPanel>
+        <CustomTabPanel value={modeValue} index={5}>
           Settings
         </CustomTabPanel>
       </Box>

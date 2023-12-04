@@ -7,11 +7,15 @@ import {
 } from 'redux-state-sync';
 import thunk from 'redux-thunk';
 
+import drugDBSlice from './drugDBSlice';
+import inventorySlice from './inventorySlice';
 import paperBillSlice from './paperBillSlice';
 import settingsSlice from './settingsSlice';
 import printSlice from './printSlice';
 
 const rootReducer = combineReducers({
+  drugDB: drugDBSlice,
+  inventory: inventorySlice,
   paperBill: paperBillSlice,
   settings: settingsSlice,
   print: printSlice,

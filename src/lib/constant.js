@@ -236,6 +236,22 @@ export const createDateInfo = (date) => {
   };
 };
 
+// 11자리 NDC 문자열에 하이픈 추가
+export const hyphenateNDC = (ndc) => {
+  if (typeof ndc !== 'string') {
+    ndc = String(ndc);
+  }
+  if (!/^\d{11,11}$/.test(ndc)) {
+    console.error('NDC must be 11-digit numbers');
+  }
+  return `${ndc.substring(0, 5)}-${ndc.substring(5, 9)}-${ndc.substring(
+    9,
+    11,
+  )}`;
+};
+// 입력된 문자열이 NDC/UPC/CIN/검색어(term)인지 구분하고 해당 타입을 문자열로 반환
+export const evaluateSearchingTerm = (term) => {};
+
 // 한자리 수의 0이나 양의 정수일 경우 0을 추가한 문자열을 반환합니다.
 export const addZero = (num) => {
   if (num < 0 || !Number.isInteger(num)) {
