@@ -1,7 +1,7 @@
 import { useState } from 'react';
 import dayjs from 'dayjs';
 import { Box, Button } from '@mui/material';
-import { useDispatch } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
 import {
   asyncReloadCardinal,
   asyncCheckCardinalInvoice,
@@ -10,11 +10,13 @@ import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs';
 import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider';
 import { DatePicker } from '@mui/x-date-pickers/DatePicker';
 import { addZero } from '../../lib/constant';
+import CardinalInvoiceReport from './CardinalInvoiceReport';
 
 const TestPage = () => {
   const dispatch = useDispatch();
   const now = dayjs();
   const [datePicked, setDatepicked] = useState(now);
+  const { cardinalInvoiceData } = useSelector((state) => state.inventory);
 
   return (
     <Box>
@@ -47,6 +49,7 @@ const TestPage = () => {
       >
         TEST BUTTON
       </Button>
+      <CardinalInvoiceReport data={cardinalInvoiceData} />
     </Box>
   );
 };

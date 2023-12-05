@@ -1,5 +1,6 @@
 import { createSlice, createAsyncThunk } from '@reduxjs/toolkit';
 import * as cardinalAPI from '../lib/api/cardinal';
+import * as mongodAPI from '../lib/api/mongod';
 
 const asyncReloadCardinal = createAsyncThunk(
   'userSlice/asyncReloadCardinal',
@@ -28,27 +29,25 @@ const inventorySlice = createSlice({
   name: 'inventory',
   initialState: {
     isLoading: false,
-    cardinalInvoiceData: null,
+    cardinalInvoiceData: [],
     error: null,
   },
   reducers: {},
   extraReducers: (builder) => {
     builder.addCase(asyncReloadCardinal.pending, (state, action) => {});
-    builder.addCase(asyncReloadCardinal.fulfilled, (state, action) => {
-      console.log(action.payload);
-    });
+    builder.addCase(asyncReloadCardinal.fulfilled, (state, action) => {});
     builder.addCase(asyncReloadCardinal.rejected, (state, action) => {
-      state.error = action.payload.error;
+      state.error = action.payload;
     });
     builder.addCase(asyncCheckCardinalInvoice.pending, (state, action) => {
       state.isLoading = true;
     });
     builder.addCase(asyncCheckCardinalInvoice.fulfilled, (state, action) => {
-      console.log(action.payload);
+      state.cardinalInvoiceData = action.payload.results;
       state.isLoading = false;
     });
     builder.addCase(asyncCheckCardinalInvoice.rejected, (state, action) => {
-      state.error = action.payload.error;
+      state.error = action.payload;
       state.isLoading = false;
     });
   },

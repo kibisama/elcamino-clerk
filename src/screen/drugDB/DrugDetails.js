@@ -1,4 +1,10 @@
-import { Box, Paper } from '@mui/material';
+import {
+  Accordion,
+  AccordionDetails,
+  AccordionSummary,
+  Box,
+} from '@mui/material';
+import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
 import Grid from '@mui/material/Unstable_Grid2';
 import { useEffect, useState } from 'react';
 import client from '../../lib/api/client';
@@ -8,19 +14,27 @@ const style = {
   descCell: {},
   descCellLabel: {},
   descCellValue: {},
-  container: {
-    borderRadius: '1rem',
-    overflow: 'hidden',
-    minWidth: '1000px',
-    minHeight: '400px',
+  accordion: {
+    '.MuiAccordion-root': {
+      borderRadius: '1rem',
+    },
+    '.MuiAccordionSummary-root': {
+      borderTopLeftRadius: '1rem',
+      borderTopRightRadius: '1rem',
+    },
   },
   topLine: {
     backgroundColor: 'primary.dark',
     fontWeight: 'bold',
-    px: '1rem',
-    py: '0.5rem',
+    px: '1.5rem',
     color: 'white',
-    fontSize: '1.1rem',
+  },
+  topLineLabel: {
+    fontWeight: 'bold',
+    mr: '0.5rem',
+  },
+  expandMoreIcon: {
+    color: 'white',
   },
 };
 //-------------------------------------------------------------
@@ -43,37 +57,37 @@ const DrugDetails = (props) => {
   }
   const imgURL = `${client.defaults.baseURL}/mongod/drugs/img/${data.cin}`;
   return (
-    <Paper
-      sx={style.container}
-      elevation={3}
-      children={
-        <>
-          <Grid container sx={style.topLine}>
-            <Grid xs={11}>
-              {data.labelName} [NDC : {data.ndc}]
-            </Grid>
-            <Grid xs={1}>minimize</Grid>
+    <Accordion sx={style.accordion} defaultExpanded>
+      <AccordionSummary
+        sx={style.topLine}
+        expandIcon={<ExpandMoreIcon sx={style.expandMoreIcon} />}
+      >
+        <Grid container>
+          <Grid xs={12} sx={{ display: 'flex' }}>
+            <Box sx={style.topLineLabel}>{data.labelName}</Box>
+            [NDC : {data.ndc}]
           </Grid>
-          <Grid container>
-            <Grid xs={3}>
-              <img src={imgURL}></img>
-            </Grid>
-            <Grid xs={3}>
-              <DescCell label="Generic Name" value={data.genericName} />
-              <DescCell label="Strength" value={data.strength} />
-              <DescCell label="Form" value={data.form} />
-              <DescCell
-                label="Size"
-                value={`${data.packageQty} X ${data.packageSize} ${data.unit}`}
-              />
-              <DescCell label="Manufacturer" value={data.mfr} />
-            </Grid>
-            <Grid xs={3}></Grid>
-            <Grid xs={3}></Grid>
+        </Grid>
+      </AccordionSummary>
+      <AccordionDetails>
+        <Grid container>
+          <Grid xs={3}>
+            <img src={imgURL}></img>
           </Grid>
-        </>
-      }
-    />
+          <Grid xs={3}>
+            <DescCell label="Generic Name" value={data.genericName} />
+            <DescCell label="Strength" value={data.strength} />
+            <DescCell
+              label="Size"
+              value={`${data.packageQty} X ${data.packageSize} ${data.unit}`}
+            />
+            <DescCell label="Manufacturer" value={data.mfr} />
+          </Grid>
+          <Grid xs={3}></Grid>
+          <Grid xs={3}></Grid>
+        </Grid>
+      </AccordionDetails>
+    </Accordion>
   );
 };
 

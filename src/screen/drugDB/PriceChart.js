@@ -5,6 +5,9 @@ import {
   ChartsYAxis,
   LinePlot,
   MarkPlot,
+  ChartsTooltip,
+  LineHighlightPlot,
+  ChartsAxisHighlight,
 } from '@mui/x-charts';
 import dayjs from 'dayjs';
 import { getMonthName } from '../../lib/constant';
@@ -82,7 +85,7 @@ const PriceChart = (props) => {
       yAxisKey: 'avgCost',
       data: yAxisAvgCost,
       connectNulls: true,
-      color: 'red',
+      color: 'purple',
     },
   ];
   return (
@@ -104,15 +107,19 @@ const PriceChart = (props) => {
           scaleType: 'linear',
           min: minCost * 0.95,
           max: maxCost * 1.05,
+          valueFormatter: (v) => `$${v.toFixed(2)}`,
         },
       ]}
     >
       <BarPlot />
       <LinePlot />
       <MarkPlot />
+      <ChartsTooltip trigger="axis" />
+      <ChartsAxisHighlight x="line" />
+      <LineHighlightPlot />
       <ChartsXAxis position="bottom" axisId="interval" />
-      <ChartsYAxis label="Order Qty" position="left" axisId="qty" />
-      <ChartsYAxis label="Average Cost" position="right" axisId="avgCost" />
+      <ChartsYAxis position="left" axisId="qty" />
+      <ChartsYAxis position="right" axisId="avgCost" />
     </ChartContainer>
   );
 };
