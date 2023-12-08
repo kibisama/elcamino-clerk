@@ -10,7 +10,7 @@ import {
   ChartsAxisHighlight,
 } from '@mui/x-charts';
 import dayjs from 'dayjs';
-import { getMonthName } from '../../lib/constant';
+import { getMonthName } from '../lib/constant';
 
 const PriceChart = (props) => {
   if (!props.data) {
@@ -23,6 +23,7 @@ const PriceChart = (props) => {
       cardinalHistUnitCost,
       cardinalHistInvoiceDate,
     },
+    mini,
   } = props;
   const now = dayjs();
   const range = 13;
@@ -91,8 +92,8 @@ const PriceChart = (props) => {
   return (
     <ChartContainer
       series={series}
-      width={1000}
-      height={400}
+      width={mini ? 400 : 1000}
+      height={mini ? 300 : 400}
       xAxis={[
         {
           id: 'interval',
@@ -114,7 +115,7 @@ const PriceChart = (props) => {
       <BarPlot />
       <LinePlot />
       <MarkPlot />
-      <ChartsTooltip trigger="axis" />
+      {!mini ?? <ChartsTooltip trigger="axis" />}
       <ChartsAxisHighlight x="line" />
       <LineHighlightPlot />
       <ChartsXAxis position="bottom" axisId="interval" />

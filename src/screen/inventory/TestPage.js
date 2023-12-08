@@ -15,6 +15,7 @@ import CardinalInvoiceReport from './CardinalInvoiceReport';
 const TestPage = () => {
   const dispatch = useDispatch();
   const now = dayjs();
+  const [forceUpdate, setForceUpdate] = useState(false);
   const [datePicked, setDatepicked] = useState(now);
   const { cardinalInvoiceData } = useSelector((state) => state.inventory);
 

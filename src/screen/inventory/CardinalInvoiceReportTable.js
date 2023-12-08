@@ -7,8 +7,9 @@ import {
   TableHead,
   TableRow,
 } from '@mui/material';
-import { useDispatch } from 'react-redux';
-import client from '../../lib/api/client';
+import Tooltip, { tooltipClasses } from '@mui/material/Tooltip';
+import { styled } from '@mui/material/styles';
+import PriceChart from '../../component/PriceChart';
 
 //----------------------------Style----------------------------
 const style = {
@@ -17,6 +18,15 @@ const style = {
   },
 };
 //-------------------------------------------------------------
+const ChartToolTip = styled(({ className, ...props }) => (
+  <Tooltip {...props} classes={{ popper: className }} />
+))(({ theme }) => ({
+  [`& .${tooltipClasses.tooltip}`]: {
+    backgroundColor: 'white',
+    border: '1px solid gray',
+    minWidth: 400,
+  },
+}));
 
 const CardinalInvoiceReportTable = (props) => {
   const { data } = props;
@@ -28,7 +38,11 @@ const CardinalInvoiceReportTable = (props) => {
     return {
       _id: v._id,
       cin: v.cin,
-      //   origQty: origQty[i],
+      cardinalHistShipQty: v.cardinalHistShipQty,
+      cardinalHistTotalCost: v.cardinalHistTotalCost,
+      cardinalHistUnitCost: v.cardinalHistUnitCost,
+      cardinalHistInvoiceDate: v.cardinalHistInvoiceDate,
+      origQty: origQty[i],
       orderQty: orderQty[i],
       shipQty: shipQty[i],
       omitCode: omitCode[i],
@@ -42,7 +56,7 @@ const CardinalInvoiceReportTable = (props) => {
       <Table sx={style.container}>
         <TableHead>
           <TableRow>
-            <TableCell align="right">CIN</TableCell>
+            <TableCell align="left">CIN</TableCell>
             <TableCell align="right">ORIG QTY</TableCell>
             <TableCell align="right">ORDER QTY</TableCell>
             <TableCell align="right">SHIP QTY</TableCell>
@@ -50,7 +64,7 @@ const CardinalInvoiceReportTable = (props) => {
             <TableCell align="right">DESCRIPTION</TableCell>
             <TableCell align="right">UNIT COST</TableCell>
             <TableCell align="right">TOTAL COST</TableCell>
-            <TableCell align="right">NOTE</TableCell>
+            <TableCell align="right">NOTES</TableCell>
           </TableRow>
         </TableHead>
         <TableBody>
@@ -63,6 +77,19 @@ const CardinalInvoiceReportTable = (props) => {
               <TableCell align="right">{row.omitCode}</TableCell>
               <TableCell align="right">{row.description}</TableCell>
               <TableCell align="right">{row.unitCost}</TableCell>
+              <TableCell align="right">
+                <ChartToolTip
+                  placement="left"
+                  title={<PriceChart data={row} mini />}
+                >
+                  $
+                  {(
+                    Number(row.unitCost.replace(/[$,]/g, '')) *
+                    Number(row.shipQty)
+                  ).toFixed(2)}
+                </ChartToolTip>
+              </TableCell>
+              <TableCell align="right"></TableCell>
             </TableRow>
           ))}
         </TableBody>

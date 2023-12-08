@@ -16,7 +16,7 @@ import {
 } from '../../reduxjs@toolkit/drugDBSlice';
 import OptionBox from './OptionBox';
 import DrugDetails from './DrugDetails';
-import PriceChart from './PriceChart';
+import PriceChart from '../../component/PriceChart';
 
 const TestPage = () => {
   const dispatch = useDispatch();
@@ -33,6 +33,29 @@ const TestPage = () => {
     debounce(handleSearch, 500),
     [],
   );
+  // getOptionLabel props에 함수가 필요하므로 검색어를 프론트부터 타입별로 변환한다
+  const getTermType = useCallback((term) => {
+    term = term.replace(/\W\s/gi, '');
+    let body = {};
+    // TODO: 정규표현식 최적화
+    switch (true) {
+      case /\d{12}/.test(term):
+        body.upc = term;
+        break;
+      case /\d{8,11}/.test(term):
+        body.ndc = term;
+        break;
+      case /\d{7}/.test(term):
+        body.cin = term;
+        break;
+      case /^\d{1,6}/.test(term):
+        body.ndc = term;
+        break;
+      default:
+        body.labelName = term;
+    }
+    return body;
+  }, []);
 
   useEffect(() => {
     if (!open) {
@@ -57,7 +80,7 @@ const TestPage = () => {
           setAutocompleteOptions([]);
         }}
         options={autocompleteOptions}
-        getOptionLabel={(option) => option.labelName}
+        getOptionLabel={(option) => option[Object.keys(getTermType(term))[0]]}
         isOptionEqualToValue={(option, value) => option.ndc === value.ndc}
         renderOption={OptionBox}
         renderInput={(params) => (
@@ -67,7 +90,7 @@ const TestPage = () => {
             onChange={(e) => {
               setTerm(e.target.value);
               dispatch(setIsSearching(true));
-              debouncedAsyncSearchDrugs({ term: e.target.value });
+              debouncedAsyncSearchDrugs(getTermType(e.target.value));
             }}
             InputProps={{
               ...params.InputProps,
