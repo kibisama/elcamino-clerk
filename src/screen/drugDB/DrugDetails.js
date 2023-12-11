@@ -6,7 +6,6 @@ import {
 } from '@mui/material';
 import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
 import Grid from '@mui/material/Unstable_Grid2';
-import { useEffect, useState } from 'react';
 import client from '../../lib/api/client';
 
 //----------------------------Style----------------------------

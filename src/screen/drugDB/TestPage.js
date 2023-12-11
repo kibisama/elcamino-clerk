@@ -67,6 +67,7 @@ const TestPage = () => {
     <Box>
       <Autocomplete
         sx={{ width: 600 }}
+        inputValue={term}
         clearOnEscape
         open={open}
         onChange={(e, newValue) => {
@@ -81,7 +82,7 @@ const TestPage = () => {
         }}
         options={autocompleteOptions}
         getOptionLabel={(option) => option[Object.keys(getTermType(term))[0]]}
-        isOptionEqualToValue={(option, value) => option.ndc === value.ndc}
+        isOptionEqualToValue={(option, value) => option.upc === value.upc}
         renderOption={OptionBox}
         renderInput={(params) => (
           <TextField
@@ -102,6 +103,13 @@ const TestPage = () => {
                   {params.InputProps.endAdornment}
                 </Fragment>
               ),
+            }}
+            onKeyDown={(e) => {
+              if (e.code === 'Enter' && autocompleteOptions[0]) {
+                dispatch(setDataSelected(autocompleteOptions[0]));
+                setTerm('');
+                setOpen(false);
+              }
             }}
           />
         )}

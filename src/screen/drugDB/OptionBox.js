@@ -19,6 +19,10 @@ const style = {
     display: 'flex',
     justifyContent: 'flex-end',
   },
+  productType: {
+    fontSize: '0.9rem',
+    fontWeight: 'bold',
+  },
   size: {
     display: 'flex',
     justifyContent: 'flex-end',
@@ -42,7 +46,10 @@ const OptionBox = (props, option) => {
         <Grid sx={style.mfr} xs={3}>
           {option.mfr.split(' ')[0]}
         </Grid>
-        <Grid xs={10}>{hyphenateNDC(option.ndc)}</Grid>
+        <Grid xs={9}>{hyphenateNDC(option.ndc)}</Grid>
+        <Grid sx={style.productType} xs={1}>
+          {option.productType}
+        </Grid>
         <Grid sx={style.size} xs={1}>
           PkgSize:
         </Grid>

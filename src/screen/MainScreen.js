@@ -9,7 +9,7 @@ import PaperBill from './PaperBill';
 
 import HomeIcon from '@mui/icons-material/Home';
 import MedicationIcon from '@mui/icons-material/Medication';
-import CalculateIcon from '@mui/icons-material/Calculate';
+import DiscountIcon from '@mui/icons-material/Discount';
 import ReceiptLongIcon from '@mui/icons-material/ReceiptLong';
 import AutoStoriesIcon from '@mui/icons-material/AutoStories';
 import SettingsIcon from '@mui/icons-material/Settings';
@@ -26,12 +26,17 @@ const style = {
     alignItems: 'center',
     borderRight: 1,
     borderColor: 'divider',
-    minWidth: '7.5rem',
-    maxWidth: '7.5rem',
+    width: 120,
     height: '100vh',
   },
   screen: {
-    ml: '7.5rem',
+    p: '0.25rem',
+    position: 'fixed',
+    left: 120,
+    minWidth: 1160,
+    width: 'calc(100% - 120px)',
+    height: '100%',
+    overflowY: 'scroll',
   },
 };
 //-------------------------------------------------------------
@@ -53,7 +58,7 @@ const MainScreen = () => {
       >
         <Tab icon={<HomeIcon />} label="Home" />
         <Tab icon={<MedicationIcon />} label="Drug DB" />
-        <Tab icon={<CalculateIcon />} label="Inventory" />
+        <Tab icon={<DiscountIcon />} label="Inventory" />
         <Tab icon={<ReceiptLongIcon />} label="Paper Bill" />
         <Tab icon={<AutoStoriesIcon />} label="CII Recon" />
         <Tab icon={<SettingsIcon />} label="Settings" />

@@ -20,7 +20,8 @@ const asyncCheckCardinalInvoice = createAsyncThunk(
       const res = await cardinalAPI.checkCardinalInvoice(body);
       return res.data;
     } catch (e) {
-      return rejectWithValue(e.response.data.error);
+      console.error(e.message);
+      return rejectWithValue(e.code);
     }
   },
 );
@@ -28,7 +29,7 @@ const asyncCheckCardinalInvoice = createAsyncThunk(
 const inventorySlice = createSlice({
   name: 'inventory',
   initialState: {
-    isLoading: false,
+    isPuppeteering: false,
     cardinalInvoiceData: [],
     error: null,
   },
@@ -40,15 +41,19 @@ const inventorySlice = createSlice({
       state.error = action.payload;
     });
     builder.addCase(asyncCheckCardinalInvoice.pending, (state, action) => {
-      state.isLoading = true;
+      state.isPuppeteering = true;
+      state.cardinalInvoiceData = [];
     });
     builder.addCase(asyncCheckCardinalInvoice.fulfilled, (state, action) => {
       state.cardinalInvoiceData = action.payload.results;
-      state.isLoading = false;
+      if (action.payload.error) {
+        state.error = action.payload.error;
+      }
+      state.isPuppeteering = false;
     });
     builder.addCase(asyncCheckCardinalInvoice.rejected, (state, action) => {
       state.error = action.payload;
-      state.isLoading = false;
+      state.isPuppeteering = false;
     });
   },
 });

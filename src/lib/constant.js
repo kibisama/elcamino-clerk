@@ -269,14 +269,23 @@ export const sum = (array, key) => {
   if (!(array instanceof Array)) {
     throw new Error('The first argument must be an array.');
   }
-  for (let i = 0; i < array.length; i++) {
-    if (typeof array[i] !== 'object' || array[i][key] === undefined) {
-      throw new Error(
-        'The array must consist of objects including the key value.',
-      );
-    }
+  // for (let i = 0; i < array.length; i++) {
+  //   if (Number.isNaN(Number(array[i]))) {
+  //     throw new Error('The array must consist of numbers only.');
+  //   }
+  // }
+  // for (let i = 0; i < array.length; i++) {
+  //   if (typeof array[i] !== 'object' || array[i][key] === undefined) {
+  //     throw new Error(
+  //       'The array must consist of objects including the key value.',
+  //     );
+  //   }
+  // }
+  if (key) {
+    return array.reduce((a, c) => a + Number(c[key]), 0);
+  } else {
+    return array.reduce((a, c) => a + Number(c), 0);
   }
-  return array.reduce((a, c) => a + Number(c[key]), 0);
 };
 
 /////////////////////////////////////////////////////////////////////////////

@@ -1,10 +1,10 @@
 import { Box } from '@mui/material';
-import TestPage from './inventory/TestPage';
+import CardinalInventoryCheck from './inventory/CardinalInventoryCheck';
 
 const Inventory = () => {
   return (
     <Box>
-      <TestPage />
+      <CardinalInventoryCheck />
     </Box>
   );
 };
