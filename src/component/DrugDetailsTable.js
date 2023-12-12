@@ -8,6 +8,9 @@ import { grey } from '@mui/material/colors';
 const style = {
   descCell: {
     mb: '0.125rem',
+    display: 'flex',
+    flexDirection: 'column',
+    alignItems: 'flex-start',
   },
   descCellLabel: {
     fontSize: '0.8rem',
@@ -15,16 +18,24 @@ const style = {
   },
   descCellValue: {
     fontSize: '0.9rem',
+    width: 240,
     textOverflow: 'ellipsis',
   },
   miniContainer: {
-    p: '0.25rem',
+    py: '4px',
   },
   miniColOne: {
     display: 'flex',
     flexDirection: 'column',
+    alignItems: 'flex-start',
   },
-  miniColTwo: {},
+  miniColTwo: {
+    display: 'flex',
+    flexDirection: 'column',
+    alignItems: 'flex-start',
+    justifyContent: 'space-evenly',
+    height: 210,
+  },
   imageBox: {
     border: '1px solid grey',
     width: 160,
@@ -33,8 +44,9 @@ const style = {
   miniColOneDesc: {
     display: 'flex',
     flexDirection: 'column',
-    pl: '0.25rem',
-    height: 54,
+    height: 50,
+    width: 160,
+    alignItems: 'center',
     justifyContent: 'space-evenly',
   },
 };
@@ -61,7 +73,7 @@ const DrugDetailsTable = (props) => {
   if (mini) {
     return (
       <Grid sx={style.miniContainer} container>
-        <Grid xs={6} sx={style.miniColOne}>
+        <Grid xs={5} sx={style.miniColOne}>
           <Box sx={style.imageBox}>
             <img src={imgURL} width={160} height={160}></img>
           </Box>
@@ -72,7 +84,7 @@ const DrugDetailsTable = (props) => {
             <Typography sx={{ fontSize: '0.9rem' }}>{data.mfr}</Typography>
           </Box>
         </Grid>
-        <Grid xs={6} sx={style.miniColTwo}>
+        <Grid xs={7} sx={style.miniColTwo}>
           <DescCell label="Generic Name" value={data.genericName} />
           <DescCell label="Strength" value={data.strength} />
           <DescCell label="Form" value={data.form} />

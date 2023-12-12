@@ -25,15 +25,32 @@ const asyncCheckCardinalInvoice = createAsyncThunk(
     }
   },
 );
+const asyncManageCSOSOrders = createAsyncThunk(
+  'userSlice/asyncManageCSOSOrders',
+  async (body, { rejectWithValue }) => {
+    try {
+      const res = await cardinalAPI.manageCSOSOrders(body);
+      return res.data;
+    } catch (e) {
+      console.error(e.message);
+      return rejectWithValue(e.code);
+    }
+  },
+);
 
 const inventorySlice = createSlice({
   name: 'inventory',
   initialState: {
     isPuppeteering: false,
     cardinalInvoiceData: [],
+    currentTab: 0,
     error: null,
   },
-  reducers: {},
+  reducers: {
+    setCurrentTabInventory: (state, action) => {
+      state.currentTab = action.payload;
+    },
+  },
   extraReducers: (builder) => {
     builder.addCase(asyncReloadCardinal.pending, (state, action) => {});
     builder.addCase(asyncReloadCardinal.fulfilled, (state, action) => {});
@@ -55,8 +72,27 @@ const inventorySlice = createSlice({
       state.error = action.payload;
       state.isPuppeteering = false;
     });
+    builder.addCase(asyncManageCSOSOrders.pending, (state, action) => {
+      state.isPuppeteering = true;
+    });
+    builder.addCase(asyncManageCSOSOrders.fulfilled, (state, action) => {
+      // state.cardinalInvoiceData = action.payload.results;
+      if (action.payload.error) {
+        state.error = action.payload.error;
+      }
+      state.isPuppeteering = false;
+    });
+    builder.addCase(asyncManageCSOSOrders.rejected, (state, action) => {
+      state.error = action.payload;
+      state.isPuppeteering = false;
+    });
   },
 });
 
 export default inventorySlice.reducer;
-export { asyncReloadCardinal, asyncCheckCardinalInvoice };
+export const { setCurrentTabInventory } = inventorySlice.actions;
+export {
+  asyncReloadCardinal,
+  asyncCheckCardinalInvoice,
+  asyncManageCSOSOrders,
+};

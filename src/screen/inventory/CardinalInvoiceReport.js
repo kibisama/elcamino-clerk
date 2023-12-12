@@ -75,10 +75,10 @@ const CardinalInvoiceReport = (props) => {
             i === a.length - 1
               ? {
                   ...style.accordion,
-                  mb: '4rem',
+                  mb: '12rem',
                   '.MuiAccordionDetails-root': {
                     ...style.accordion['.MuiAccordionDetails-root'],
-                    mb: '4rem',
+                    mb: '12rem',
                   },
                 }
               : style.accordion

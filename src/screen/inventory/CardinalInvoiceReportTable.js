@@ -1,5 +1,7 @@
 import {
   Box,
+  Button,
+  CircularProgress,
   Table,
   TableBody,
   TableCell,
@@ -13,6 +15,8 @@ import { styled } from '@mui/material/styles';
 import PriceChart from '../../component/PriceChart';
 import DrugDetailsTable from '../../component/DrugDetailsTable';
 import { sum } from '../../lib/constant';
+import { asyncManageCSOSOrders } from '../../reduxjs@toolkit/inventorySlice';
+import { useDispatch, useSelector } from 'react-redux';
 
 //----------------------------Style----------------------------
 const style = {
@@ -34,10 +38,29 @@ const style = {
     fontSize: '0.95rem',
     fontWeight: 'bold',
   },
+  csosReportButton: {
+    minWidth: 140,
+    minHeight: 37,
+  },
 };
 //-------------------------------------------------------------
 const ChartToolTip = styled(({ className, ...props }) => (
-  <Tooltip {...props} classes={{ popper: className }} />
+  <Tooltip
+    {...props}
+    PopperProps={{
+      disablePortal: true,
+      popperOptions: {
+        positionFixed: true,
+        modifiers: {
+          preventOverflow: {
+            enabled: true,
+            boundariesElement: 'window',
+          },
+        },
+      },
+    }}
+    classes={{ popper: className }}
+  />
 ))(({ theme }) => ({
   [`& .${tooltipClasses.tooltip}`]: {
     ...style.tooltip,
@@ -45,7 +68,22 @@ const ChartToolTip = styled(({ className, ...props }) => (
   },
 }));
 const DescToolTip = styled(({ className, ...props }) => (
-  <Tooltip {...props} classes={{ popper: className }} />
+  <Tooltip
+    {...props}
+    PopperProps={{
+      disablePortal: true,
+      popperOptions: {
+        positionFixed: true,
+        modifiers: {
+          preventOverflow: {
+            enabled: true,
+            boundariesElement: 'window',
+          },
+        },
+      },
+    }}
+    classes={{ popper: className }}
+  />
 ))(({ theme }) => ({
   [`& .${tooltipClasses.tooltip}`]: {
     ...style.tooltip,
@@ -55,6 +93,8 @@ const DescToolTip = styled(({ className, ...props }) => (
 
 const CardinalInvoiceReportTable = (props) => {
   const { data } = props;
+  const dispatch = useDispatch();
+  const { isPuppeteering } = useSelector((state) => state.inventory);
   if (!data) {
     return;
   }
@@ -70,6 +110,9 @@ const CardinalInvoiceReportTable = (props) => {
       unitCost: cost[i],
     };
   });
+  const totalItemsShipped = sum(rows, 'shipQty');
+
+  //TODO data.csosReported
   return (
     <TableContainer sx={{ mt: '0.5rem' }} component={Box}>
       <Table size="small" sx={style.container}>
@@ -108,7 +151,7 @@ const CardinalInvoiceReportTable = (props) => {
             <TableCell sx={{ ...style.tableHeader, width: 100 }} align="right">
               TOTAL COST
             </TableCell>
-            <TableCell sx={{ ...style.tableHeader, width: 120 }} align="center">
+            <TableCell sx={{ ...style.tableHeader, width: 160 }} align="center">
               NOTES
             </TableCell>
           </TableRow>
@@ -137,7 +180,7 @@ const CardinalInvoiceReportTable = (props) => {
               <TableCell align="center">{row.productType}</TableCell>
               <TableCell align="right">
                 <DescToolTip
-                  placement="left"
+                  placement="right"
                   title={<DrugDetailsTable data={row} mini />}
                 >
                   <div>{row.description}</div>
@@ -162,25 +205,63 @@ const CardinalInvoiceReportTable = (props) => {
             </TableRow>
           ))}
           <TableRow>
-            <TableCell />
-            <TableCell sx={style.tableFooter} align="right" colSpan={4}>
+            <TableCell sx={style.tableFooter} align="right" colSpan={3}>
               QTY SHIPPED
             </TableCell>
-            <TableCell sx={style.tableFooter}>{sum(rows, 'shipQty')}</TableCell>
-            <TableCell colSpan={1} />
+            <TableCell colSpan={4} sx={style.tableFooter}>
+              {totalItemsShipped}
+            </TableCell>
             <TableCell sx={style.tableFooter}>TOTAL</TableCell>
             <TableCell sx={style.tableFooter}>
               $
               {rows
                 .reduce(
-                  (a, c, i) =>
+                  (a, c) =>
                     a +
                     Number(c.shipQty) * Number(c.unitCost.replace(/[$,]/g, '')),
                   0,
                 )
                 .toFixed(2)}
             </TableCell>
-            <TableCell />
+            <TableCell>
+              {/* TODO: CSOSReported True일 경우 버튼 대신 완료 아이콘 표시 */}
+              {data.csoNumber ? (
+                <Box sx={{ display: 'flex', justifyContent: 'center' }}>
+                  <Tooltip title="If you received different items or quantities, please report manually via Cardinal website.">
+                    <Button
+                      sx={style.csosReportButton}
+                      color="secondary"
+                      variant="contained"
+                      disableElevation
+                      disabled={!totalItemsShipped > 0 || isPuppeteering}
+                      onClick={() => {
+                        dispatch(
+                          asyncManageCSOSOrders({
+                            csoNumber: data.csoNumber,
+                            poDate: data.orderDate,
+                            item: rows
+                              .filter((v) => Number(v.shipQty) > 0)
+                              .map((v) => {
+                                return {
+                                  cin: v.cin,
+                                  date: data.invoiceDate,
+                                  qty: v.shipQty,
+                                };
+                              }),
+                          }),
+                        );
+                      }}
+                    >
+                      {isPuppeteering ? (
+                        <CircularProgress size="1.4rem" color="inherit" />
+                      ) : (
+                        <span>CSOS REPORT</span>
+                      )}
+                    </Button>
+                  </Tooltip>
+                </Box>
+              ) : null}
+            </TableCell>
           </TableRow>
         </TableBody>
       </Table>

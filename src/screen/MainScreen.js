@@ -30,7 +30,7 @@ const style = {
     height: '100vh',
   },
   screen: {
-    p: '0.25rem',
+    // p: '10px',
     position: 'fixed',
     left: 120,
     minWidth: 1160,

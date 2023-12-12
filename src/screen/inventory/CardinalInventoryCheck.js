@@ -16,7 +16,7 @@ import SearchIcon from '@mui/icons-material/Search';
 //----------------------------Style----------------------------
 const style = {
   container: {
-    p: '1rem',
+    px: '2.5rem',
   },
   controller: {
     py: '0.5rem',
@@ -34,6 +34,7 @@ const style = {
     minWidth: 160,
     fontSize: '0.9rem',
   },
+  switchBox: {},
 };
 //-------------------------------------------------------------
 
@@ -41,6 +42,7 @@ const CardinalInventoryCheck = () => {
   const dispatch = useDispatch();
   const now = dayjs();
   const [forceUpdate, setForceUpdate] = useState(false);
+  const [secondSrcUpdate, setSecondSrcUpdate] = useState(false);
   const [datePicked, setDatepicked] = useState(now);
   const date = `${addZero(datePicked.$M + 1)}/${addZero(datePicked.$D)}/${
     datePicked.$y
@@ -48,7 +50,6 @@ const CardinalInventoryCheck = () => {
   const { cardinalInvoiceData, isPuppeteering } = useSelector(
     (state) => state.inventory,
   );
-  console.log(cardinalInvoiceData);
   return (
     <Box sx={style.container}>
       <Box sx={style.controller}>
@@ -70,12 +71,15 @@ const CardinalInventoryCheck = () => {
               asyncCheckCardinalInvoice({
                 date,
                 forceUpdate,
+                secondSrcUpdate,
               }),
             );
           }}
           variant="contained"
           disabled={
-            isPuppeteering || date === cardinalInvoiceData[0].invoiceDate
+            isPuppeteering ||
+            (cardinalInvoiceData.length > 0 &&
+              date === cardinalInvoiceData[0].invoiceDate)
           }
           startIcon={
             isPuppeteering ? (
@@ -87,15 +91,24 @@ const CardinalInventoryCheck = () => {
         >
           {isPuppeteering ? null : <span>FIND INVOICE</span>}
         </Button>
-        <Tooltip title="Force Update">
-          <Switch
-            checked={forceUpdate}
-            defaultChecked={false}
-            onChange={() => {
-              setForceUpdate(!forceUpdate);
-            }}
-          />
-        </Tooltip>
+        <Box sx={style.switchBox}>
+          <Tooltip title="Force Update: This will update every single item on the given invoice date.">
+            <Switch
+              checked={forceUpdate}
+              onChange={() => {
+                setForceUpdate(!forceUpdate);
+              }}
+            />
+          </Tooltip>
+          <Tooltip title="Secondary Source Update: This will update the secondary source prices for equivalent substitutions.">
+            <Switch
+              checked={secondSrcUpdate}
+              onChange={() => {
+                setSecondSrcUpdate(!secondSrcUpdate);
+              }}
+            />
+          </Tooltip>
+        </Box>
       </Box>
       <CardinalInvoiceReport data={cardinalInvoiceData} />
     </Box>
