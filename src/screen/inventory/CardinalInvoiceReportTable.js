@@ -239,6 +239,7 @@ const CardinalInvoiceReportTable = (props) => {
                           asyncManageCSOSOrders({
                             csoNumber: data.csoNumber,
                             poDate: data.orderDate,
+                            shipDate: data.invoiceDate,
                             item: rows
                               .filter((v) => Number(v.shipQty) > 0)
                               .map((v) => {
