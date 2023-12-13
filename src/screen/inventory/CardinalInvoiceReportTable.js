@@ -8,10 +8,12 @@ import {
   TableContainer,
   TableHead,
   TableRow,
+  Typography,
 } from '@mui/material';
-import { red } from '@mui/material/colors';
+import { red, green } from '@mui/material/colors';
 import Tooltip, { tooltipClasses } from '@mui/material/Tooltip';
 import { styled } from '@mui/material/styles';
+import CheckIcon from '@mui/icons-material/Check';
 import PriceChart from '../../component/PriceChart';
 import DrugDetailsTable from '../../component/DrugDetailsTable';
 import { sum } from '../../lib/constant';
@@ -38,9 +40,18 @@ const style = {
     fontSize: '0.95rem',
     fontWeight: 'bold',
   },
+  csosReportBox: {
+    display: 'flex',
+    justifyContent: 'center',
+    alignItems: 'center',
+    fontWeight: 'bold',
+  },
   csosReportButton: {
     minWidth: 140,
     minHeight: 37,
+  },
+  reportedIcon: {
+    color: green[700],
   },
 };
 //-------------------------------------------------------------
@@ -113,6 +124,7 @@ const CardinalInvoiceReportTable = (props) => {
   const totalItemsShipped = sum(rows, 'shipQty');
 
   //TODO data.csosReported
+  console.log(data);
   return (
     <TableContainer sx={{ mt: '0.5rem' }} component={Box}>
       <Table size="small" sx={style.container}>
@@ -157,15 +169,14 @@ const CardinalInvoiceReportTable = (props) => {
           </TableRow>
         </TableHead>
         <TableBody>
-          {rows.map((row) => (
-            <TableRow key={row._id}>
-              <TableCell
-                align="left"
-                onClick={() => {
-                  window.navigator.clipboard.writeText(row.cin);
-                }}
-                component="th"
-              >
+          {rows.map((row, i) => (
+            <TableRow
+              key={i}
+              onClick={() => {
+                window.navigator.clipboard.writeText(row.ndc);
+              }}
+            >
+              <TableCell align="left" component="th">
                 {row.cin}
               </TableCell>
               <TableCell align="right">{row.origQty}</TableCell>
@@ -186,7 +197,28 @@ const CardinalInvoiceReportTable = (props) => {
                   <div>{row.description}</div>
                 </DescToolTip>
               </TableCell>
-              <TableCell align="right">{row.unitCost}</TableCell>
+              <TableCell
+                align="right"
+                sx={((row) => {
+                  const unitCost = Number(row.unitCost.replace(/[$,]/g, ''));
+                  const lastCost = Number(
+                    row.cardinalHistUnitCost[0]?.replace(/[$,]/g, ''),
+                  );
+                  const lastCostwithPriceMatch = Number(
+                    row.cardinalHistUnitCost[1]?.replace(/[$,]/g, ''),
+                  );
+                  switch (true) {
+                    case unitCost > lastCost:
+                      return { color: red[700] };
+                    case unitCost < lastCostwithPriceMatch && unitCost !== 0:
+                      return { color: green[800] };
+                    default:
+                      return null;
+                  }
+                })(row)}
+              >
+                {row.unitCost}
+              </TableCell>
               <TableCell align="right">
                 <ChartToolTip
                   placement="left"
@@ -224,44 +256,50 @@ const CardinalInvoiceReportTable = (props) => {
                 .toFixed(2)}
             </TableCell>
             <TableCell>
-              {/* TODO: CSOSReported True일 경우 버튼 대신 완료 아이콘 표시 */}
-              {data.csoNumber ? (
-                <Box sx={{ display: 'flex', justifyContent: 'center' }}>
-                  <Tooltip title="If you received different items or quantities, please report manually via Cardinal website.">
-                    <Button
-                      sx={style.csosReportButton}
-                      color="secondary"
-                      variant="contained"
-                      disableElevation
-                      disabled={!totalItemsShipped > 0 || isPuppeteering}
-                      onClick={() => {
-                        dispatch(
-                          asyncManageCSOSOrders({
-                            csoNumber: data.csoNumber,
-                            poDate: data.orderDate,
-                            shipDate: data.invoiceDate,
-                            item: rows
-                              .filter((v) => Number(v.shipQty) > 0)
-                              .map((v) => {
-                                return {
-                                  cin: v.cin,
-                                  date: data.invoiceDate,
-                                  qty: v.shipQty,
-                                };
-                              }),
-                          }),
-                        );
-                      }}
-                    >
-                      {isPuppeteering ? (
-                        <CircularProgress size="1.4rem" color="inherit" />
-                      ) : (
-                        <span>CSOS REPORT</span>
-                      )}
-                    </Button>
-                  </Tooltip>
-                </Box>
-              ) : null}
+              {/* TODO: isCSOSReported True일 경우 버튼 대신 완료 아이콘 표시 */}
+              {data.csoNumber &&
+                (!data.csosReported ? (
+                  <Box sx={style.csosReportBox}>
+                    <Tooltip title="If you received different items or quantities, please report manually via Cardinal website.">
+                      <Button
+                        sx={style.csosReportButton}
+                        color="secondary"
+                        variant="contained"
+                        disableElevation
+                        disabled={!totalItemsShipped > 0 || isPuppeteering}
+                        onClick={() => {
+                          dispatch(
+                            asyncManageCSOSOrders({
+                              csoNumber: data.csoNumber,
+                              poDate: data.orderDate,
+                              shipDate: data.invoiceDate,
+                              item: rows
+                                .filter((v) => Number(v.shipQty) > 0)
+                                .map((v) => {
+                                  return {
+                                    cin: v.cin,
+                                    date: data.invoiceDate,
+                                    qty: v.shipQty,
+                                  };
+                                }),
+                            }),
+                          );
+                        }}
+                      >
+                        {isPuppeteering ? (
+                          <CircularProgress size="1.4rem" color="inherit" />
+                        ) : (
+                          <span>CSOS REPORT</span>
+                        )}
+                      </Button>
+                    </Tooltip>
+                  </Box>
+                ) : (
+                  <Box sx={style.csosReportBox}>
+                    <CheckIcon color="success" />
+                    REPORTED
+                  </Box>
+                ))}
             </TableCell>
           </TableRow>
         </TableBody>
