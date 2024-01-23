@@ -4,6 +4,7 @@ import SwipeableViews from 'react-swipeable-views-react-18-fix/lib/SwipeableView
 import CustomTabPanel from '../component/CustomTabPanel';
 import { setCurrentTabInventory } from '../reduxjs@toolkit/inventorySlice';
 import CardinalInventoryCheck from './inventory/CardinalInventoryCheck';
+import InventoryManager from './inventory/InventoryManager';
 
 const style = {
   tabs: {
@@ -27,16 +28,16 @@ const Inventory = () => {
           dispatch(setCurrentTabInventory(newValue));
         }}
       >
+        <Tab label="STORE INVENTORY" />
         <Tab label="CARDINAL INVOICE" />
-        <Tab label="FUNCTION 2" />
         <Tab label="FUNCTION 3" />
       </Tabs>
       <SwipeableViews index={currentTab}>
         <CustomTabPanel value={currentTab} index={0}>
-          <CardinalInventoryCheck />
+          <InventoryManager />
         </CustomTabPanel>
         <CustomTabPanel value={currentTab} index={1}>
-          FUNCTION 2
+          <CardinalInventoryCheck />
         </CustomTabPanel>
         <CustomTabPanel value={currentTab} index={2}>
           FUNCTION 3

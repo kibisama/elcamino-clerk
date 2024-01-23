@@ -41,8 +41,8 @@ const style = {
 const CardinalInventoryCheck = () => {
   const dispatch = useDispatch();
   const now = dayjs();
-  const [forceUpdate, setForceUpdate] = useState(false);
-  const [secondSrcUpdate, setSecondSrcUpdate] = useState(false);
+  const [forceUpdate, setForceUpdate] = useState(true);
+  const [secondSrcUpdate, setSecondSrcUpdate] = useState(true);
   const [datePicked, setDatepicked] = useState(now);
   const date = `${addZero(datePicked.$M + 1)}/${addZero(datePicked.$D)}/${
     datePicked.$y

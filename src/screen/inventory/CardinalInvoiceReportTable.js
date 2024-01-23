@@ -19,6 +19,7 @@ import DrugDetailsTable from '../../component/DrugDetailsTable';
 import { sum } from '../../lib/constant';
 import { asyncManageCSOSOrders } from '../../reduxjs@toolkit/inventorySlice';
 import { useDispatch, useSelector } from 'react-redux';
+import dayjs from 'dayjs';
 
 //----------------------------Style----------------------------
 const style = {
@@ -109,7 +110,18 @@ const CardinalInvoiceReportTable = (props) => {
   if (!data) {
     return;
   }
-  const { cost, item, omitCode, origQty, orderQty, shipQty } = data;
+  const {
+    cost,
+    item,
+    omitCode,
+    origQty,
+    orderQty,
+    shipQty,
+    orderDate,
+    poNumber,
+    csosReported,
+  } = data;
+  const invoiceDate = dayjs(data.invoiceDate);
   const rows = item.map((v, i) => {
     return {
       ...v,
@@ -123,8 +135,6 @@ const CardinalInvoiceReportTable = (props) => {
   });
   const totalItemsShipped = sum(rows, 'shipQty');
 
-  //TODO data.csosReported
-  console.log(data);
   return (
     <TableContainer sx={{ mt: '0.5rem' }} component={Box}>
       <Table size="small" sx={style.container}>
@@ -200,17 +210,34 @@ const CardinalInvoiceReportTable = (props) => {
               <TableCell
                 align="right"
                 sx={((row) => {
+                  let lastPurchaseIndex = 0;
+                  if (row.cardinalHistInvoiceDate.length > 0) {
+                    for (
+                      let i = 0;
+                      i < row.cardinalHistInvoiceDate.length;
+                      i++
+                    ) {
+                      if (
+                        dayjs(row.cardinalHistInvoiceDate[i]).isBefore(
+                          invoiceDate,
+                        )
+                      ) {
+                        lastPurchaseIndex = i;
+                        break;
+                      }
+                    }
+                  }
                   const unitCost = Number(row.unitCost.replace(/[$,]/g, ''));
                   const lastCost = Number(
-                    row.cardinalHistUnitCost[0]?.replace(/[$,]/g, ''),
-                  );
-                  const lastCostwithPriceMatch = Number(
-                    row.cardinalHistUnitCost[1]?.replace(/[$,]/g, ''),
+                    row.cardinalHistUnitCost[lastPurchaseIndex]?.replace(
+                      /[$,]/g,
+                      '',
+                    ),
                   );
                   switch (true) {
                     case unitCost > lastCost:
                       return { color: red[700] };
-                    case unitCost < lastCostwithPriceMatch && unitCost !== 0:
+                    case unitCost < lastCost && unitCost !== 0:
                       return { color: green[800] };
                     default:
                       return null;
@@ -256,9 +283,8 @@ const CardinalInvoiceReportTable = (props) => {
                 .toFixed(2)}
             </TableCell>
             <TableCell>
-              {/* TODO: isCSOSReported True일 경우 버튼 대신 완료 아이콘 표시 */}
-              {data.csoNumber &&
-                (!data.csosReported ? (
+              {poNumber &&
+                (!csosReported ? (
                   <Box sx={style.csosReportBox}>
                     <Tooltip title="If you received different items or quantities, please report manually via Cardinal website.">
                       <Button
@@ -270,8 +296,8 @@ const CardinalInvoiceReportTable = (props) => {
                         onClick={() => {
                           dispatch(
                             asyncManageCSOSOrders({
-                              csoNumber: data.csoNumber,
-                              poDate: data.orderDate,
+                              poNumber,
+                              poDate: orderDate,
                               shipDate: data.invoiceDate,
                               item: rows
                                 .filter((v) => Number(v.shipQty) > 0)

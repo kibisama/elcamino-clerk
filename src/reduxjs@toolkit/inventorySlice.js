@@ -20,7 +20,6 @@ const asyncCheckCardinalInvoice = createAsyncThunk(
       const res = await cardinalAPI.checkCardinalInvoice(body);
       return res.data;
     } catch (e) {
-      console.error(e.message);
       return rejectWithValue(e.code);
     }
   },
@@ -32,7 +31,6 @@ const asyncManageCSOSOrders = createAsyncThunk(
       const res = await cardinalAPI.manageCSOSOrders(body);
       return res.data;
     } catch (e) {
-      console.error(e.message);
       return rejectWithValue(e.code);
     }
   },
@@ -62,10 +60,7 @@ const inventorySlice = createSlice({
       state.cardinalInvoiceData = [];
     });
     builder.addCase(asyncCheckCardinalInvoice.fulfilled, (state, action) => {
-      state.cardinalInvoiceData = action.payload.results;
-      if (action.payload.error) {
-        state.error = action.payload.error;
-      }
+      state.cardinalInvoiceData = action.payload;
       state.isPuppeteering = false;
     });
     builder.addCase(asyncCheckCardinalInvoice.rejected, (state, action) => {
@@ -76,10 +71,7 @@ const inventorySlice = createSlice({
       state.isPuppeteering = true;
     });
     builder.addCase(asyncManageCSOSOrders.fulfilled, (state, action) => {
-      // state.cardinalInvoiceData = action.payload.results;
-      if (action.payload.error) {
-        state.error = action.payload.error;
-      }
+      state.cardinalInvoiceData = action.payload;
       state.isPuppeteering = false;
     });
     builder.addCase(asyncManageCSOSOrders.rejected, (state, action) => {

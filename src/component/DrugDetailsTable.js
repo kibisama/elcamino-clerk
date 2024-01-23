@@ -1,7 +1,6 @@
 import { Box, Typography } from '@mui/material';
 import Grid from '@mui/material/Unstable_Grid2';
 import client from '../lib/api/client';
-import { hyphenateNDC } from '../lib/constant';
 import { grey } from '@mui/material/colors';
 
 //----------------------------Style----------------------------
@@ -69,6 +68,7 @@ const DrugDetailsTable = (props) => {
   if (!data) {
     return;
   }
+  console.log(data);
   const imgURL = `${client.defaults.baseURL}/mongod/drugs/img/${data.cin}`;
   if (mini) {
     return (
@@ -78,9 +78,7 @@ const DrugDetailsTable = (props) => {
             <img src={imgURL} width={160} height={160}></img>
           </Box>
           <Box sx={style.miniColOneDesc}>
-            <Typography sx={{ fontSize: '0.9rem' }}>
-              {hyphenateNDC(data.ndc)}
-            </Typography>
+            <Typography sx={{ fontSize: '0.9rem' }}>{data.ndc}</Typography>
             <Typography sx={{ fontSize: '0.9rem' }}>{data.mfr}</Typography>
           </Box>
         </Grid>
@@ -92,7 +90,7 @@ const DrugDetailsTable = (props) => {
             label="Size"
             value={`${data.packageQty} X ${data.packageSize} ${data.unit}`}
           />
-          <DescCell label="Storage" value={data.storage} />
+          <DescCell label="Storage" value={data.returnPackaging} />
         </Grid>
       </Grid>
     );
