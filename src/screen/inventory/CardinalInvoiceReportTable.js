@@ -15,11 +15,13 @@ import Tooltip, { tooltipClasses } from '@mui/material/Tooltip';
 import { styled } from '@mui/material/styles';
 import CheckIcon from '@mui/icons-material/Check';
 import PriceChart from '../../component/PriceChart';
+import PriceComparison from '../../component/PriceComparison';
 import DrugDetailsTable from '../../component/DrugDetailsTable';
 import { sum } from '../../lib/constant';
 import { asyncManageCSOSOrders } from '../../reduxjs@toolkit/inventorySlice';
 import { useDispatch, useSelector } from 'react-redux';
 import dayjs from 'dayjs';
+import { useCallback } from 'react';
 
 //----------------------------Style----------------------------
 const style = {
@@ -54,7 +56,14 @@ const style = {
   reportedIcon: {
     color: green[700],
   },
+  descRed: {
+    color: red[700],
+  },
+  descGreen: {
+    color: green[800],
+  },
 };
+
 //-------------------------------------------------------------
 const ChartToolTip = styled(({ className, ...props }) => (
   <Tooltip
@@ -102,11 +111,105 @@ const DescToolTip = styled(({ className, ...props }) => (
     minWidth: 420,
   },
 }));
+const PriceToolTip = styled(({ className, ...props }) => (
+  <Tooltip
+    {...props}
+    PopperProps={{
+      disablePortal: true,
+      popperOptions: {
+        positionFixed: true,
+        modifiers: {
+          preventOverflow: {
+            enabled: true,
+            boundariesElement: 'window',
+          },
+        },
+      },
+    }}
+    classes={{ popper: className }}
+  />
+))(({ theme }) => ({
+  [`& .${tooltipClasses.tooltip}`]: {
+    ...style.tooltip,
+    minWidth: 800,
+  },
+}));
 
 const CardinalInvoiceReportTable = (props) => {
   const { data } = props;
   const dispatch = useDispatch();
   const { isPuppeteering } = useSelector((state) => state.inventory);
+  // Price Data
+  const compareCostAndHist = useCallback((row) => {
+    let lastPurchaseIndex = 0;
+    if (row.cardinalHistInvoiceDate.length > 0) {
+      for (let i = 0; i < row.cardinalHistInvoiceDate.length; i++) {
+        if (dayjs(row.cardinalHistInvoiceDate[i]).isBefore(invoiceDate)) {
+          lastPurchaseIndex = i;
+          break;
+        }
+      }
+    }
+    const unitCost = Number(row.unitCost.replace(/[$,]/g, ''));
+    const lastCost = Number(
+      row.cardinalHistUnitCost[lastPurchaseIndex]?.replace(/[$,]/g, ''),
+    );
+    switch (true) {
+      case unitCost > lastCost:
+        return style.descRed;
+      case unitCost < lastCost && unitCost !== 0:
+        return style.descGreen;
+      default:
+        return null;
+    }
+  });
+
+  //Price Data
+  const calculatePriceData = useCallback((row) => {
+    const lastOrderedBySF =
+      row.cardinalHistOrderDate[row.cardinalHistOrderMethod.indexOf('SFDC')];
+    const numberCardinalHistUnitCost = row.cardinalHistUnitCost.map((cost) =>
+      Number(cost.replace(/[$,]/g, '')),
+    );
+    const minCardinalHistUnitCost = Math.min(...numberCardinalHistUnitCost);
+    const minCardinalUnitCost =
+      row.cardinalHistUnitCost[
+        numberCardinalHistUnitCost.indexOf(minCardinalHistUnitCost)
+      ];
+    const totlaSize = Number(row.packageQty) * Number(row.packageSize);
+    const ppu = Number(row.unitCost.replace(/[$,]/g, '') / totlaSize).toFixed(
+      2,
+    );
+
+    const styleDate = (a, b) => {
+      if (a?.isAfter(dayjs(b))) {
+        return style.descRed;
+      }
+    };
+    const styleCost = (a, b) => {
+      if (
+        !!b &&
+        Number(a?.replace(/[$,]/g, '')) > Number(b?.replace(/[$,]/g, ''))
+      ) {
+        return style.descGreen;
+      }
+    };
+    return {
+      lastOrderedBySF,
+      styleLastOrderedBySF: styleDate(_60daysBeforeDate, lastOrderedBySF),
+      minCardinalUnitCost,
+      ppu,
+      unit: row.unit,
+      dateLastUpdatedSmartSource: row.dateLastUpdatedSmartSource,
+      styleDateLastUpdatedSmartSource: styleDate(
+        _60daysBeforeDate,
+        row.dateLastUpdatedSmartSource,
+      ),
+      smartSourceCost: row.smartSourceCost,
+      styleSmartSourceCost: styleCost(row.unitCost, row.smartSourceCost),
+      smartSourceAltBACCost: row.smartSourceAltBACCost,
+    };
+  }, []);
   if (!data) {
     return;
   }
@@ -119,8 +222,10 @@ const CardinalInvoiceReportTable = (props) => {
     shipQty,
     orderDate,
     poNumber,
-    csosReported,
+    isCSOSReported,
   } = data;
+  const now = dayjs();
+  const _60daysBeforeDate = now.subtract(60, 'day');
   const invoiceDate = dayjs(data.invoiceDate);
   const rows = item.map((v, i) => {
     return {
@@ -135,6 +240,7 @@ const CardinalInvoiceReportTable = (props) => {
   });
   const totalItemsShipped = sum(rows, 'shipQty');
 
+  console.log(data);
   return (
     <TableContainer sx={{ mt: '0.5rem' }} component={Box}>
       <Table size="small" sx={style.container}>
@@ -207,44 +313,13 @@ const CardinalInvoiceReportTable = (props) => {
                   <div>{row.description}</div>
                 </DescToolTip>
               </TableCell>
-              <TableCell
-                align="right"
-                sx={((row) => {
-                  let lastPurchaseIndex = 0;
-                  if (row.cardinalHistInvoiceDate.length > 0) {
-                    for (
-                      let i = 0;
-                      i < row.cardinalHistInvoiceDate.length;
-                      i++
-                    ) {
-                      if (
-                        dayjs(row.cardinalHistInvoiceDate[i]).isBefore(
-                          invoiceDate,
-                        )
-                      ) {
-                        lastPurchaseIndex = i;
-                        break;
-                      }
-                    }
-                  }
-                  const unitCost = Number(row.unitCost.replace(/[$,]/g, ''));
-                  const lastCost = Number(
-                    row.cardinalHistUnitCost[lastPurchaseIndex]?.replace(
-                      /[$,]/g,
-                      '',
-                    ),
-                  );
-                  switch (true) {
-                    case unitCost > lastCost:
-                      return { color: red[700] };
-                    case unitCost < lastCost && unitCost !== 0:
-                      return { color: green[800] };
-                    default:
-                      return null;
-                  }
-                })(row)}
-              >
-                {row.unitCost}
+              <TableCell align="right" sx={compareCostAndHist(row)}>
+                <PriceToolTip
+                  placement="left"
+                  title={<PriceComparison data={calculatePriceData(row)} />}
+                >
+                  <div>{row.unitCost}</div>
+                </PriceToolTip>
               </TableCell>
               <TableCell align="right">
                 <ChartToolTip
@@ -284,7 +359,7 @@ const CardinalInvoiceReportTable = (props) => {
             </TableCell>
             <TableCell>
               {poNumber &&
-                (!csosReported ? (
+                (!isCSOSReported ? (
                   <Box sx={style.csosReportBox}>
                     <Tooltip title="If you received different items or quantities, please report manually via Cardinal website.">
                       <Button

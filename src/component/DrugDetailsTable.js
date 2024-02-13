@@ -68,7 +68,6 @@ const DrugDetailsTable = (props) => {
   if (!data) {
     return;
   }
-  console.log(data);
   const imgURL = `${client.defaults.baseURL}/mongod/drugs/img/${data.cin}`;
   if (mini) {
     return (

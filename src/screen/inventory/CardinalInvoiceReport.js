@@ -101,8 +101,8 @@ const CardinalInvoiceReport = (props) => {
               <Grid xs={3}>SHIP DATE: {v.invoiceDate}</Grid>
               <Grid xs={3}>{renameInvoiceType(v.invoiceType)}</Grid>
               <Grid xs={3}>
-                {v.csoNumber ? 'CSO#: ' : null}
-                {v.csoNumber}
+                {v.poNumber ? 'CSO#: ' : null}
+                {v.poNumber}
               </Grid>
             </Grid>
           </AccordionSummary>
